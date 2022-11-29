@@ -2,7 +2,7 @@ body{
     margin: 0;
     padding: 0;
     font-family: montserrat;
-    background: linear-gradient(120deg,#2980b9, #8e44ad);
+    background: linear-gradient(120deg,#2980b9, #04a194);
     height: 100vh;
     overflow: hidden;
 }
@@ -41,9 +41,9 @@ form .txtfield{
 .txt_field label{
     position: absolute;
     top: 35%;
-    left: 5px;
+    left: 50px;
     color: #adadad;
-    transform: translateY(-50%);
+    transform: translateY(0%);
     font-size: 16px;
     pointer-events: none;
     transition: .5s;
@@ -51,7 +51,7 @@ form .txtfield{
 .txt_field span::before{
     content: '';
     position: absolute;
-    top: 40px;
+    top: 140px;
     left: 0;
     width: 0%;
     height: 2px;
@@ -60,19 +60,66 @@ form .txtfield{
 }
 .txt_field input:focus ~ label,
 .txt_field input:valid ~ label{
-    top: -2px;
+    top: 0px;
     color: #2691d9
 }
 .txt_field input:focus ~ span::before,
 .txt_field input:valid ~ span::before{
     width: 100%;
 }
-.pass{
+form .txtfield2{
+    position: relative;
+    border-bottom: 4px solid #adadad;
+    margin: 60px 0;
+}
+.txt_field2 input{
+    width: 100%;
+    padding: 0 5px;
+    height: 40px;
+    font-size: 16px;
+    border: none;
+    background: none;
+    outline: none;
+}
+.txt_field2 label{
+    position: absolute;
+    top: 43%;
+    left: 50px;
+    color: #adadad;
+    transform: translateY(0%);
+    font-size: 16px;
+    pointer-events: none;
+    transition: .5s;
+}
+.txt_field2 span::before{
+    content: '';
+    position: absolute;
+    top: 175px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #2691d9;
+    transition: .5s;
+}
+.txt_field2 input:focus ~ label,
+.txt_field2 input:valid ~ label{
+    top: 0px;
+    color: #2691d9
+}
+.txt_field2 input:focus ~ span::before,
+.txt_field2 input:valid ~ span::before{
+    width: 100%;
+}
+.wwv{
     margin: -5px 0 20px 5px;
-    color: #a6a6a6 ;
+    color: #adadad ;
     cursor: pointer;
 }
-.pass::hover{
+.wwv a{
+    color: #adadad;
+    text-decoration: none;
+}
+.wwv a:hover{
     text-decoration: underline;
 }
 input[type="submit"]{
