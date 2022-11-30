@@ -35,6 +35,13 @@ def index():
         "home.html", table_list=tables, database_file=DATABASE_FILE
     )
 
+@app.route("/inlog")
+def inlog():
+    tables = dbm.get_table_list()
+    return render_template(
+        "tables.html", table_list=tables, database_file=DATABASE_FILE
+    )
+
 
 # The table route displays the content of a table
 @app.route("/table_details/<table_name>")

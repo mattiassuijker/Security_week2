@@ -17,6 +17,7 @@ class DatabaseModel:
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
         tables = [table[0] for table in cursor.fetchall()]
         return tables
+        
 
     # Given a table name, return the rows and column names
     def get_table_content(self, table_name):
