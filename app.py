@@ -39,7 +39,7 @@ def index():
 def inlog():
     tables = dbm.get_table_list()
     return render_template(
-        "tables.html", table_list=tables, database_file=DATABASE_FILE
+        "test-correct.html", table_list=tables, database_file=DATABASE_FILE
     )
 
 
