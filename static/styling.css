@@ -85,11 +85,10 @@ form .txtfield2{
     position: absolute;
     top: 43%;
     left: 50px;
-    color: #adadad;
+    color: #ffffff;
     transform: translateY(0%);
     font-size: 16px;
     pointer-events: none;
-    transition: .5s;
 }
 .txt_field2 span::before{
     content: '';
@@ -99,13 +98,8 @@ form .txtfield2{
     width: 0%;
     height: 2px;
     background: #2691d9;
-    transition: .5s;
 }
-.txt_field2 input:focus ~ label,
-.txt_field2 input:valid ~ label{
-    top: 0px;
-    color: #2691d9
-}
+
 .txt_field2 input:focus ~ span::before,
 .txt_field2 input:valid ~ span::before{
     width: 100%;

@@ -4,24 +4,23 @@
         <meta charset="utf-8">
         <title>Animated login Form</title>
         <link rel="stylesheet" href="../static/styling.css">
+        <script src="login1.js"></script>
     </head>
     <body>
         <div class="center">
             <h1>Login</h1>
             <form method="post">
                 <div class="txt_field">
-                    <input type="text" required>
+                    <input type="text" placeholder="gebruikersnaam" id="username" required>
                     <span></span>
-                    <label>Uw naam</label>
                 </div>
                 <div class="txt_field2">
-                    <input type="wachtwoord" required>
+                    <input type="text" placeholder="wachtwoord" id="password" required>
                     <span></span>
-                    <label>Wachtwoord</label>
                 </div>
                 <div class="wwv"><a href="#">wachtwoord vergeten?</a>
                 </div>
-                <input type="submit" value="Login">
+            <input type="submit" value="Login" onclick="validate()">
                 <div class="Inschrijf_link">
                     Nog geen lid? <a href="#">inschrijven</a>
                 </div>
