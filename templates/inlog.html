@@ -4,7 +4,6 @@
         <meta charset="utf-8">
         <title>Animated login Form</title>
         <link rel="stylesheet" href="../static/styling.css">
-        <script src="login1.js"></script>
     </head>
     <body>
         <div class="center">
@@ -12,20 +11,35 @@
             <form method="post">
                 <div class="txt_field">
                     <input type="text" placeholder="gebruikersnaam" id="username" required>
-                    <span></span>
                 </div>
                 <div class="txt_field2">
                     <input type="text" placeholder="wachtwoord" id="password" required>
-                    <span></span>
                 </div>
                 <div class="wwv"><a href="#">wachtwoord vergeten?</a>
                 </div>
-            <input type="submit" value="Login" onclick="validate()">
+            <input type="submit" value="Login" class="submit-btn" id="login" onclick="validate()"/>
                 <div class="Inschrijf_link">
                     Nog geen lid? <a href="#">inschrijven</a>
                 </div>
             </form>
         </div>
-
+        <script>
+            function validate()
+            {
+                var username=document.getElementById("username").Value;
+                var password=document.getElementById("password").Value;
+                if(username == "admin" && password == "user")
+                {
+                    window.location.assign("/");
+                    alert("Login is Succesvol");
+                }
+                else
+                {
+                    window.location.assign("/");
+                    alert("fout wachtwoord of gebruikersnaam");
+                }
+                return;
+            }
+        </script>
     </body>
 </html>

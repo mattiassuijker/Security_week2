@@ -44,7 +44,6 @@ def inlog():
 
 
 
-
 # The table route displays the content of a table
 @app.route("/table_details/<table_name>")
 def table_content(table_name=None):
