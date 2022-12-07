@@ -30,7 +30,7 @@
                 {% for field in row %}
                 <td>{{ field }}</td>
                 {% endfor %}
-                <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-leerdoel="{{ row[1] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
+                <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-leerdoel="{{ row[1] }}" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
                 <td><button type="button" class="btn btn-danger">Verwijderen</button></td>
             </tr>
             {% endfor %}
@@ -45,26 +45,21 @@
                   <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <h2>Wijzigen</h2>
-                    <p id="id"></p>
-
-                    <form>
-                        <div class="mb-3">
-                          <label for="exampleInputEmail1" class="form-label">Leerdoel</label>
-                          <input type="text" value="" class="form-control" id="leerdoel" aria-describedby="emailHelp">
-                        </div>
-                        <div class="mb-3">
-                          <label for="exampleInputPassword1" class="form-label">Password</label>
-                          <input type="password" class="form-control" id="exampleInputPassword1">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                      </form> 
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                <form action="/wijzigen" method="POST">
+                  <div class="modal-body">
+                      <h2>Wijzigen</h2>
+                      
+                        <input type="hidden" class="farm-control" name="id" value="" id="id">
+                          <div class="mb-3">
+                            <label class="form-label">Vraag</label>
+                            <input type="text" value="" class="form-control" id="vraag" name="vraag">
+                          </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -75,12 +70,10 @@
         $(document).ready(function() {
             $('.wijzig').click(function() {
                 var id = $(this).data('id');
-                var leerdoel = $(this).data('leerdoel');
+                var vraag = $(this).data('vraag');
 
-
-
-                document.getElementById("leerdoel").value = leerdoel;
-                $("#id").text('ID: '+ id);
+                document.getElementById("vraag").value = vraag;
+                document.getElementById("id").value = id;
             });
         });
     </script>

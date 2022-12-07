@@ -1,3 +1,4 @@
+from multiprocessing import connection
 import os
 import sqlite3
 
@@ -35,4 +36,10 @@ class DatabaseModel:
         cursor.execute(f"DELETE FROM {table_name} WHERE id = {ID} ")
         return 
 
+    def change_table_row(self, vraag, id):
+        connection = sqlite3.connect(self.database_file)
+        cursor = connection.cursor()
+        cursor.execute(f"UPDATE vragen SET vraag = '{vraag}' WHERE id = '{id}' ")
+        connection.commit()
+        cursor.close()
 
