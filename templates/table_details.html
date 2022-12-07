@@ -31,7 +31,7 @@
                 <td>{{ field }}</td>
                 {% endfor %}
                 <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-leerdoel="{{ row[1] }}" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
-                <td><button type="button" class="btn btn-danger">Verwijderen</button></td>
+                <td><button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal1" data-leerdoel="{{ row[1] }}" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="verwijder btn btn-danger">Verwijderen</button></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -57,7 +57,33 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-danger">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/verwijder" method="POST">
+                  <div class="modal-body">
+                      <h2>Weet je zeker dat je dit wilt verwijderen.</h2>
+                      
+                        <input type="hidden" class="farm-control" name="id" value="" id="id1">
+                          <div class="mb-3">
+                            <label class="form-label">Vraag</label>
+                            <input type="text" value="" class="form-control" id="vraag1" name="vraag">
+                          </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nee</button>
+                    <button type="submit" class="btn btn-primary">Ja</button>
                   </div>
                 </form>
               </div>
@@ -74,6 +100,13 @@
 
                 document.getElementById("vraag").value = vraag;
                 document.getElementById("id").value = id;
+            });
+
+            $('.verwijder').click(function() {
+                var id = $(this).data('id');
+                var vraag = $(this).data('vraag');
+                document.getElementById("vraag1").value = vraag;
+                document.getElementById("id1").value = id;
             });
         });
     </script>

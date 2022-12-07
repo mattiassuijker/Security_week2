@@ -61,6 +61,13 @@ def wijzig_table():
     if request.method == "POST":
         return redirect("/table_details/vragen", code=302)
 
+@app.route("/verwijder", methods=['POST', 'GET'])
+def delete_table():
+    dbm.delete_table_row(request.form.get('id'))
+    if request.method == "POST":
+        return redirect("/table_details/vragen", code=302)
+
+
 
 #404 error pagina
 @app.errorhandler(404)
