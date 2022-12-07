@@ -20,8 +20,10 @@
                 {% for column in columns %}
                 <th>{{ column }}</th>
                 {% endfor %}
+                {% if 'vragen' in table_name %}
                 <th>aanpassen</th>
                 <th>Verwijderen</th>
+                {%endif %}
             </tr>
             </thead>
             <tbody>
@@ -30,8 +32,10 @@
                 {% for field in row %}
                 <td>{{ field }}</td>
                 {% endfor %}
+                {% if 'vragen' in table_name %}
                 <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-leerdoel="{{ row[1] }}" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
                 <td><button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal1" data-leerdoel="{{ row[1] }}" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="verwijder btn btn-danger">Verwijderen</button></td>
+                {% endif %}
             </tr>
             {% endfor %}
             </tbody>
@@ -47,7 +51,7 @@
                 </div>
                 <form action="/wijzigen" method="POST">
                   <div class="modal-body">
-                      <h2>Wijzigen</h2>
+                      <h1>Wijzigen</h1>
                       
                         <input type="hidden" class="farm-control" name="id" value="" id="id">
                           <div class="mb-3">
@@ -73,7 +77,7 @@
                 </div>
                 <form action="/verwijder" method="POST">
                   <div class="modal-body">
-                      <h2>Weet je zeker dat je dit wilt verwijderen.</h2>
+                      <h1>Weet je zeker dat je dit wilt verwijderen.</h1>
                       
                         <input type="hidden" class="farm-control" name="id" value="" id="id1">
                           <div class="mb-3">
