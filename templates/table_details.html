@@ -13,8 +13,18 @@
 <main>
     <h1>Database onderzoek</h1>
     <p>Alle rijen in de tabel <b>{{ table_name }}</b>:</p>
-    <div id="container" class="container text-center">
-        <table class="table table-hover">
+    <div id="container" class="container">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Dropdown button
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Another action</a></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+      </div>
+        <table class="table table-bordered table-hover">
             <thead>
             <tr>
                 {% for column in columns %}
@@ -54,13 +64,12 @@
                         <input type="hidden" class="farm-control" name="id" value="" id="id">
                           <div class="mb-3">
                             <label class="form-label">Vraag</label>
-                            <!-- <input type="text" value="" class="form-control" id="vraag" name="vraag"> -->
-                            <textarea id="vraag" class="form-control" name="vraag" value="" ></textarea>
+                            <textarea id="vraag" class="form-control" name="vraag" value="" rows="5" cols="70" ></textarea>
                           </div>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleer</button>
+                    <button type="submit" class="btn btn-success">Save changes</button>
                   </div>
                 </form>
               </div>
@@ -79,12 +88,12 @@
                         <input type="hidden" class="farm-control" name="id" value="" id="id1">
                           <div class="mb-3">
                             <label class="form-label">Vraag</label>
-                            <input type="text" value="" class="form-control" id="vraag1" name="vraag">
+                            <textarea id="vraag1" class="form-control" name="vraag" value="" rows="5" cols="70" ></textarea>
                           </div>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nee</button>
-                    <button type="submit" class="btn btn-primary">Ja</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleer</button>
+                    <button type="submit" class="btn btn-danger">Verwijderen</button>
                   </div>
                 </form>
               </div>
