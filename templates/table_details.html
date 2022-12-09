@@ -13,7 +13,7 @@
 <main>
     <h1>Database onderzoek</h1>
     <p>Alle rijen in de tabel <b>{{ table_name }}</b>:</p>
-    <div class="container text-center">
+    <div id="container" class="container text-center">
         <table class="table table-hover">
             <thead>
             <tr>
@@ -46,13 +46,11 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Wijzigen</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="/wijzigen" method="POST">
                   <div class="modal-body">
-                      <h1>Wijzigen</h1>
-                      
                         <input type="hidden" class="farm-control" name="id" value="" id="id">
                           <div class="mb-3">
                             <label class="form-label">Vraag</label>
@@ -72,13 +70,11 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Weet je zeker dat je dit wilt verwijderen.</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="/verwijder" method="POST">
                   <div class="modal-body">
-                      <h1>Weet je zeker dat je dit wilt verwijderen.</h1>
-                      
                         <input type="hidden" class="farm-control" name="id" value="" id="id1">
                           <div class="mb-3">
                             <label class="form-label">Vraag</label>

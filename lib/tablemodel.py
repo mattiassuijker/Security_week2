@@ -23,7 +23,10 @@ class DatabaseModel:
     # Given a table name, return the rows and column names
     def get_table_content(self, table_name):
         cursor = sqlite3.connect(self.database_file).cursor()
-        cursor.execute(f"SELECT * FROM {table_name}")
+        if (table_name == 'vragen'):
+            cursor.execute(f"SELECT vragen.id, leerdoelen.leerdoel, vragen.vraag, voornaam || ' ' || achternaam AS naam FROM vragen JOIN leerdoelen, auteurs ON vragen.leerdoel = leerdoelen.id AND vragen.auteur = auteurs.id LIMIT 40")
+        else:
+            cursor.execute(f"SELECT * FROM {table_name} LIMIT 40")
         # An alternative for this 2 var approach is to set a sqlite row_factory on the connection
         table_headers = [column_name[0] for column_name in cursor.description]
         table_content = cursor.fetchall()
