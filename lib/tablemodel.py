@@ -24,7 +24,7 @@ class DatabaseModel:
     def get_table_content(self, table_name):
         cursor = sqlite3.connect(self.database_file).cursor()
         if (table_name == 'vragen'):
-            cursor.execute(f"SELECT vragen.id, leerdoelen.leerdoel, vragen.vraag, voornaam || ' ' || achternaam AS naam FROM vragen JOIN leerdoelen, auteurs ON vragen.leerdoel = leerdoelen.id AND vragen.auteur = auteurs.id LIMIT 40")
+            cursor.execute(f"SELECT vragen.id, leerdoelen.leerdoel, vragen.vraag, voornaam || ' ' || achternaam AS auteurnaam FROM vragen LEFT JOIN leerdoelen ON vragen.leerdoel = leerdoelen.id LEFT JOIN auteurs ON vragen.auteur = auteurs.id LIMIT 70")
         else:
             cursor.execute(f"SELECT * FROM {table_name} LIMIT 40")
         # An alternative for this 2 var approach is to set a sqlite row_factory on the connection
