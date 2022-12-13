@@ -1,13 +1,11 @@
 import os.path
 import sys
 
+from flask import Flask, render_template, session, flash, jsonify, request, redirect
 
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
-from flask_mysqldb import MySQL
-import MySQLdb.cursors
-import re
+from flask_session import Session
 
 # This demo glues a random database and the Flask framework. If the database file does not exist,
 # a simple demo dataset will be created.
@@ -19,6 +17,9 @@ FLASK_DEBUG = True
 app = Flask(__name__)
 # This command creates the "<application directory>/databases/testcorrect_vragen.db" path
 DATABASE_FILE = os.path.join(app.root_path, 'databases', 'testcorrect_vragen.db')
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 # Check if the database file exists. If not, create a demo database
 if not os.path.isfile(DATABASE_FILE):
@@ -26,104 +27,67 @@ if not os.path.isfile(DATABASE_FILE):
     create_demo_database(DATABASE_FILE)
 dbm = DatabaseModel(DATABASE_FILE)
 
-
-# Change this to your secret key (can be anything, it's for extra protection)
-app.secret_key = 'your secret key'
-
-# Enter your database connection details below
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'testcorrect_vragen'
-
-# Intialize MySQL
-mysql = MySQL(app)
-
-
-
 # Main route that shows a list of tables in the database
 # Note the "@app.route" decorator. This might be a new concept for you.
 # It is a way to "decorate" a function with additional functionality. You
 # can safely ignore this for now - or look into it as it is a really powerful
 # concept in Python.
-
-
-
-
 @app.route("/")
 def index():
     tables = dbm.get_table_list()
-    return render_template(
-        "home.html", table_list=tables, database_file=DATABASE_FILE
-    )
+    return render_template("home.html", table_list=tables, database_file=DATABASE_FILE, type=session.get("type"))
 
-@app.route("/inlog", methods=["GET", "POST"])
-def inlog():
+@app.route("/create_question")
+def create_page():
+    print('hello')
+    rows = dbm.get_table_content(table_name = 'leerdoelen')
+    return render_template("create.html", rows=rows[0])
+    
+@app.route('/create_question/', methods=('GET', 'POST'))
+def create():
+    if request.method == 'POST':
+        question = request.form['vraag']
+        leerdoel = request.form['leerdoel']
+        auteur = request.form['auteur']
+        if not question:
+            return render_template('create.html')
+        else:
+            dbm.create_vraag(question, leerdoel, auteur)
+
+    return table_content(table_name='vragen')
+
+@app.route("/inlog")
+def inlog_page():
     tables = dbm.get_table_list()
     return render_template(
         "inlog.html", table_list=tables, database_file=DATABASE_FILE
     )
 
-
-def login():
-    # Output message if something goes wrong...
-
-    # Check if "username" and "password" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        # Create variables for easy access
+@app.route("/inlog/", methods=('GET', 'POST'))
+def inlog():
+    if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
-        # Check if account exists using MySQL
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password,))
-        # Fetch one record and return result
-        account = cursor.fetchone()
-        
-        # If account exists in accounts table in out database
-        if account:
-            # Create session data, we can access this data in other routes
-            session['loggedin'] = True
-            session['id'] = account['id']
-            session['username'] = account['username']
-            # Redirect to home page
-            return 'Logged in successfully!'
+        if dbm.login(username, password) == False:
+            return redirect("/inlog")
         else:
-            # Account doesnt exist or username/password incorrect
-            msg = 'Incorrect username/password!'
+            level = dbm.login(username, password)
+            session["type"] = level
+    return redirect("/")
 
-@app.route('/inlog', methods=['GET', 'POST'])
-def login():
-    # Output message if something goes wrong...
-    msg = ''
-    # Check if "username" and "password" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        # Create variables for easy access
-        username = request.form['username']
-        password = request.form['password']
-        # Check if account exists using MySQL
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password,))
-        # Fetch one record and return result
-        account = cursor.fetchone()
-        # If account exists in accounts table in out database
-        if account:
-            # Create session data, we can access this data in other routes
-            session['loggedin'] = True
-            session['id'] = account['id']
-            session['username'] = account['username']
-            # Redirect to home page
-            return 'Logged in successfully!'
-        else:
-            # Account doesnt exist or username/password incorrect
-            msg = 'Incorrect username/password!'
-    # Show the login form with message (if any)
-    return render_template('inlog.html', msg=msg)
+@app.route("/logout")
+def logout():
+    session["type"] = 0
+    return redirect("/")
 
 
 # The table route displays the content of a table
 @app.route("/table_details/<table_name>",  methods=['GET', 'POST'])
 def table_content(table_name=None):
+    if session.get("type") != '1':
+        print(session.get("type"))
+        # if not there in the session then redirect to the login page
+        return redirect("/")
     if not table_name:
         return "Missing table name", 400  # HTTP 400 = Bad Request
     else:

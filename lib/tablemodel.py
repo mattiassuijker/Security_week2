@@ -19,6 +19,27 @@ class DatabaseModel:
         tables = [table[0] for table in cursor.fetchall()]
         return tables
         
+    def create_vraag(self, question,leerdoel, auteur):
+        conn = sqlite3.connect(self.database_file)
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT id FROM vragen ORDER BY id DESC LIMIT 1")
+        char = cursor.fetchall()
+        list = char[0]
+        id = list[0] + 1
+        cursor.execute(f"INSERT INTO vragen (id, username, password, type) VALUES ('{id}', '{leerdoel}', '{question}', '{auteur}')")
+        conn.commit()
+        return 
+
+    def login(self, username, password):
+        conn = sqlite3.connect(self.database_file)
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT type FROM users WHERE username='{username}' AND password='{password}'")
+        level_block = cursor.fetchall()
+        if not level_block:
+            return False
+        else:
+            level = level_block[0]
+            return level[0]
 
     # Given a table name, return the rows and column names
     def get_table_content(self, table_name):
