@@ -1,10 +1,11 @@
 import os.path
 import sys
 
-from flask import Flask, render_template, flash, jsonify, request, redirect
+from flask import Flask, render_template, session, flash, jsonify, request, redirect
 
 from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
+from flask_session import Session
 
 # This demo glues a random database and the Flask framework. If the database file does not exist,
 # a simple demo dataset will be created.
@@ -16,6 +17,9 @@ FLASK_DEBUG = True
 app = Flask(__name__)
 # This command creates the "<application directory>/databases/testcorrect_vragen.db" path
 DATABASE_FILE = os.path.join(app.root_path, 'databases', 'testcorrect_vragen.db')
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 # Check if the database file exists. If not, create a demo database
 if not os.path.isfile(DATABASE_FILE):
@@ -31,9 +35,7 @@ dbm = DatabaseModel(DATABASE_FILE)
 @app.route("/")
 def index():
     tables = dbm.get_table_list()
-    return render_template(
-        "home.html", table_list=tables, database_file=DATABASE_FILE
-    )
+    return render_template("home.html", table_list=tables, database_file=DATABASE_FILE, type=session.get("type"))
 
 @app.route("/create_question")
 def create_page():
@@ -55,17 +57,37 @@ def create():
     return table_content(table_name='vragen')
 
 @app.route("/inlog")
-def inlog():
+def inlog_page():
     tables = dbm.get_table_list()
     return render_template(
         "inlog.html", table_list=tables, database_file=DATABASE_FILE
     )
 
+@app.route("/inlog/", methods=('GET', 'POST'))
+def inlog():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if dbm.login(username, password) == False:
+            return redirect("/inlog")
+        else:
+            level = dbm.login(username, password)
+            session["type"] = level
+    return redirect("/")
+
+@app.route("/logout")
+def logout():
+    session["type"] = 0
+    return redirect("/")
 
 
 # The table route displays the content of a table
 @app.route("/table_details/<table_name>",  methods=['GET', 'POST'])
 def table_content(table_name=None):
+    if session.get("type") != '1':
+        print(session.get("type"))
+        # if not there in the session then redirect to the login page
+        return redirect("/")
     if not table_name:
         return "Missing table name", 400  # HTTP 400 = Bad Request
     else:
