@@ -35,6 +35,25 @@ def index():
         "home.html", table_list=tables, database_file=DATABASE_FILE
     )
 
+@app.route("/create_question")
+def create_page():
+    print('hello')
+    rows = dbm.get_table_content(table_name = 'leerdoelen')
+    return render_template("create.html", rows=rows[0])
+    
+@app.route('/create_question/', methods=('GET', 'POST'))
+def create():
+    if request.method == 'POST':
+        question = request.form['vraag']
+        leerdoel = request.form['leerdoel']
+        auteur = request.form['auteur']
+        if not question:
+            return render_template('create.html')
+        else:
+            dbm.create_vraag(question, leerdoel, auteur)
+
+    return table_content(table_name='vragen')
+
 @app.route("/inlog")
 def inlog():
     tables = dbm.get_table_list()

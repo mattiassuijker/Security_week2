@@ -13,6 +13,9 @@
 <main>
     <h1>Database onderzoek</h1>
     <p>Alle rijen in de tabel <b>{{ table_name }}</b>:</p>
+    {% if 'vragen' in table_name %}
+        <a href="/create_question" class="btn btn-primary">create</a>
+    {% endif  %}
     <div id="container" class="container">
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
