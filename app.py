@@ -1,7 +1,8 @@
 import os.path
 import sys
 
-from flask import Flask, render_template, request, redirect, url_for, session
+
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify,
 
 from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
@@ -45,7 +46,7 @@ def inlog():
 
 
 # The table route displays the content of a table
-@app.route("/table_details/<table_name>")
+@app.route("/table_details/<table_name>",  methods=['GET', 'POST'])
 def table_content(table_name=None):
     if not table_name:
         return "Missing table name", 400  # HTTP 400 = Bad Request
@@ -54,6 +55,20 @@ def table_content(table_name=None):
         return render_template(
             "table_details.html", rows=rows, columns=column_names, table_name=table_name
         )
+
+@app.route("/wijzigen", methods=['POST', 'GET'])
+def wijzig_table():
+    dbm.change_table_row(request.form.get('vraag'), request.form.get('id'))
+    if request.method == "POST":
+        return redirect("/table_details/vragen", code=302)
+
+@app.route("/verwijder", methods=['POST', 'GET'])
+def delete_table():
+    dbm.delete_table_row(request.form.get('id'))
+    if request.method == "POST":
+        return redirect("/table_details/vragen", code=302)
+
+
 
 #404 error pagina
 @app.errorhandler(404)

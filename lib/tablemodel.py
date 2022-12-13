@@ -1,3 +1,4 @@
+from multiprocessing import connection
 import os
 import sqlite3
 
@@ -22,7 +23,10 @@ class DatabaseModel:
     # Given a table name, return the rows and column names
     def get_table_content(self, table_name):
         cursor = sqlite3.connect(self.database_file).cursor()
-        cursor.execute(f"SELECT * FROM {table_name}")
+        if (table_name == 'vragen'):
+            cursor.execute(f"SELECT vragen.id, leerdoelen.leerdoel, vragen.vraag, voornaam || ' ' || achternaam AS auteurnaam FROM vragen LEFT JOIN leerdoelen ON vragen.leerdoel = leerdoelen.id LEFT JOIN auteurs ON vragen.auteur = auteurs.id LIMIT 70")
+        else:
+            cursor.execute(f"SELECT * FROM {table_name} LIMIT 40")
         # An alternative for this 2 var approach is to set a sqlite row_factory on the connection
         table_headers = [column_name[0] for column_name in cursor.description]
         table_content = cursor.fetchall()
@@ -30,9 +34,17 @@ class DatabaseModel:
         # Note that this method returns 2 variables!
         return table_content, table_headers
 
-    def delete_table_row(self, table_name, ID):
-        cursor = sqlite3.connect(self.database_file).cursor()
-        cursor.execute(f"DELETE FROM {table_name} WHERE id = {ID} ")
-        return 
+    def delete_table_row(self, id):
+        connection = sqlite3.connect(self.database_file)
+        cursor = connection.cursor()
+        cursor.execute(f"DELETE FROM vragen WHERE id = '{id}' ")
+        connection.commit()
+        cursor.close()
 
+    def change_table_row(self, vraag, id):
+        connection = sqlite3.connect(self.database_file)
+        cursor = connection.cursor()
+        cursor.execute(f"UPDATE vragen SET vraag = '{vraag}' WHERE id = '{id}' ")
+        connection.commit()
+        cursor.close()
 
