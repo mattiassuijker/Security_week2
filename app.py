@@ -1,7 +1,7 @@
 import os.path
 import sys
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, session
 
 from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
@@ -35,7 +35,7 @@ def index():
         "home.html", table_list=tables, database_file=DATABASE_FILE
     )
 
-@app.route("/inlog")
+@app.route("/inlog", methods=["GET", "POST"])
 def inlog():
     tables = dbm.get_table_list()
     return render_template(
