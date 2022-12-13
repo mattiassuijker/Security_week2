@@ -10,37 +10,19 @@
             <h1>Login</h1>
             <form method="post">
                 <div class="txt_field">
-                    <input type="text" placeholder="gebruikersnaam" id="username" required>
+                    <input type="text" name="username" placeholder="gebruikersnaam" id="username" required>
                 </div>
                 <div class="txt_field2">
-                    <input type="password" placeholder="wachtwoord" id="password" required>
+                    <input type="password" name="password" placeholder="wachtwoord" id="password" required>
                 </div>
+                <div class="msg">{{ msg }}</div>
                 <div class="wwv"><a href="#">wachtwoord vergeten?</a>
                 </div>
-            <input type="submit" value="Login" class="submit-btn" id="login" onclick="validate()"/>
+            <input type="submit" value="Login" class="submit-btn" id="login"/>
                 <div class="Inschrijf_link">
                     Nog geen lid? <a href="#">inschrijven</a>
                 </div>
             </form>
         </div>
-        <script>
-            function validate()
-            {
-                var username=document.getElementById('username').value;
-                var password=document.getElementById('password').value;
-                console.log(username,password)
-                if(username == "admin" && password == "user")
-                {
-                    window.location.assign("/");
-                    alert("Login is Succesvol");
-                }
-                else
-                {
-                    window.location.assign("/inlog");
-                    alert("fout wachtwoord of gebruikersnaam");
-                }
-                return;
-            }
-        </script>
     </body>
 </html>
