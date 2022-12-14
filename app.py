@@ -41,9 +41,9 @@ def index():
 
 @app.route("/create_question")
 def create_page():
-    print('hello')
-    rows = dbm.get_table_content(table_name = 'leerdoelen')
-    return render_template("create.html", rows=rows[0])
+    rows_leerdoelen = dbm.get_table_content(table_name = 'leerdoelen')
+    rows_auteurs = dbm.get_table_content(table_name = 'auteurs')
+    return render_template("create.html", leerdoelen=rows_leerdoelen[0],auteurs=rows_auteurs[0])
     
 @app.route('/create_question/', methods=('GET', 'POST'))
 def create():
