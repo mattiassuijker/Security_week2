@@ -89,6 +89,7 @@ def table_content(table_name=None):
     if not table_name:
         return "Missing table name", 400  # HTTP 400 = Bad Request
     else:
+        print(session.get("type"))
         rows, column_names = dbm.get_table_content(table_name)
         return render_template(
             "table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type")
@@ -117,7 +118,7 @@ def update_query():
 def get_items():
     table_name = 'vragen'
     rows, column_names = dbm.html_table_row()
-    return render_template("mistakes.html", rows=rows, columns=column_names, table_name=table_name)
+    return render_template("mistakes.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
 
 
 #404 error pagina
