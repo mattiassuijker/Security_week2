@@ -17,9 +17,11 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
+              {% if type == 0 %}
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/inlog">Inlog</a>
               </li>
+              {% endif %}
               {% if type != 0 %}
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/logout">Logout</a>
