@@ -67,6 +67,18 @@ def delete_table():
     if request.method == "POST":
         return redirect("/table_details/vragen", code=302)
 
+@app.route("/update-query", methods=['GET', 'POST'])
+def update_query():
+    rows, column_names = dbm.html_table_content()
+    return render_template(
+            "table_details.html", rows=rows, columns=column_names)
+
+
+@app.route('/get-items', methods=['GET', 'POST'])
+def get_items():
+    table_name = 'vragen'
+    rows, column_names = dbm.html_table_row()
+    return render_template("mistakes.html", rows=rows, columns=column_names, table_name=table_name)
 
 
 #404 error pagina

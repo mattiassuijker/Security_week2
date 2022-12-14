@@ -48,3 +48,9 @@ class DatabaseModel:
         connection.commit()
         cursor.close()
 
+    def html_table_row(self):
+        cursor = sqlite3.connect(self.database_file).cursor()
+        cursor.execute(f"SELECT * FROM vragen WHERE vraag LIKE '%<%' OR vraag LIKE '%>%'")
+        table_headers = [column_name[0] for column_name in cursor.description]
+        table_content = cursor.fetchall()
+        return table_content, table_headers
