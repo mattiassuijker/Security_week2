@@ -8,9 +8,11 @@
             {% for column in columns %}
             <th>{{ column }}</th>
             {% endfor %}
-            {% if 'vragen' in table_name %}
-            <th>aanpassen</th>
-            <th>Verwijderen</th>
+            {% if type == 1 %}
+              {% if 'vragen' in table_name %}
+              <th>aanpassen</th>
+              <th>Verwijderen</th>
+              {%endif %}
             {%endif %}
         </tr>
         </thead>
@@ -20,10 +22,12 @@
             {% for field in row %}
             <td>{{ field }}</td>
             {% endfor %}
-            {% if 'vragen' in table_name %}
-            <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
-            <td><button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal1" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="verwijder btn btn-danger">Verwijderen</button></td>
-            {% endif %}
+            {% if type == 1 %}
+              {% if 'vragen' in table_name %}
+              <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
+              <td><button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal1" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="verwijder btn btn-danger">Verwijderen</button></td>
+              {% endif %}
+            {%endif %}
         </tr>
         {% endfor %}
         </tbody>

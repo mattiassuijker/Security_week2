@@ -37,6 +37,8 @@ def index():
     tables = dbm.get_table_list()
     return render_template("home.html", table_list=tables, database_file=DATABASE_FILE, type=session.get("type"))
 
+
+
 @app.route("/create_question")
 def create_page():
     print('hello')
@@ -84,16 +86,13 @@ def logout():
 # The table route displays the content of a table
 @app.route("/table_details/<table_name>",  methods=['GET', 'POST'])
 def table_content(table_name=None):
-    if session.get("type") != '1':
-        print(session.get("type"))
-        # if not there in the session then redirect to the login page
-        return redirect("/")
     if not table_name:
         return "Missing table name", 400  # HTTP 400 = Bad Request
     else:
+        print(session.get("type"))
         rows, column_names = dbm.get_table_content(table_name)
         return render_template(
-            "table_details.html", rows=rows, columns=column_names, table_name=table_name
+            "table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type")
         )
 
 @app.route("/wijzigen", methods=['POST', 'GET'])
@@ -119,7 +118,7 @@ def update_query():
 def get_items():
     table_name = 'vragen'
     rows, column_names = dbm.html_table_row()
-    return render_template("mistakes.html", rows=rows, columns=column_names, table_name=table_name)
+    return render_template("mistakes.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
 
 
 #404 error pagina
