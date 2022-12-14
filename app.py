@@ -5,7 +5,7 @@ from flask import Flask, render_template, session, flash, jsonify, request, redi
 
 from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
-from flask_session import Session
+from flask_session.__init__ import Session
 
 # This demo glues a random database and the Flask framework. If the database file does not exist,
 # a simple demo dataset will be created.
@@ -104,6 +104,18 @@ def delete_table():
     if request.method == "POST":
         return redirect("/table_details/vragen", code=302)
 
+@app.route("/update-query", methods=['GET', 'POST'])
+def update_query():
+    rows, column_names = dbm.html_table_content()
+    return render_template(
+            "table_details.html", rows=rows, columns=column_names)
+
+
+@app.route('/get-items', methods=['GET', 'POST'])
+def get_items():
+    table_name = 'vragen'
+    rows, column_names = dbm.html_table_row()
+    return render_template("mistakes.html", rows=rows, columns=column_names, table_name=table_name)
 
 
 #404 error pagina
