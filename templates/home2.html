@@ -19,21 +19,6 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/inlog">Inlog</a>
               </li>
-              {% if type != 0 %}
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/logout">Logout</a>
-              </li>
-              {% endif %}
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Tabellen
-                </a>
-                <ul class="dropdown-menu">
-                    {% for table in table_list %}
-                    <li><a class="dropdown-item" href="/table_details/{{ table }}">{{ table }}</a></li>
-                    {% endfor %}
-                </ul>
-              </li>
             </ul>
           </div>
         </div>

@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Database displayer</title>
+    <meta name="description" content="Simple database display"/>
+    <meta name="author" content="Rotterdam Academy"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/static/basic.css" type="text/css">
+</head>
+<body>
+<main>
+    <h1>Create pagina</h1>
+    <p>Create hier je vraag</p>
+    <form method="post">
+        <label for="create">create</label>
+        <br>
+        <input type="text" name="vraag"
+               placeholder="vraag"
+               value="{{ request.form['vraag'] }}"></input>    
+        <label for="leerdoel">Leerdoel</label>
+        <select name="leerdoel" id="leerdoel">
+            {% for row in rows %}
+                <option value="{{ row[0] }}">{{ row[1] }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="auteur">auteur</label>
+
+        <select name="auteur" id="auteur">
+            <option value="10">10</option>
+            <option value="22">22</option>
+            <option value="50">50</option>
+            <option value="200">200</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+</main>
+</body>
+</html>

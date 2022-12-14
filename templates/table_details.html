@@ -13,6 +13,9 @@
 <main id="table">
     <h1>Database onderzoek</h1>
     <p>Alle rijen in de tabel <b>{{ table_name }}</b>:</p>
+    {% if 'vragen' in table_name %}
+        <a href="/create_question" class="btn btn-primary">create</a>
+    {% endif  %}
     <div id="container" class="container">
       <button id="update-button">Update</button>
         <table class="table table-bordered table-hover">
