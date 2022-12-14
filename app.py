@@ -5,7 +5,7 @@ from flask import Flask, render_template, session, flash, jsonify, request, redi
 
 from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
-from flask_session.__init__ import Session
+from flask_session import Session
 
 # This demo glues a random database and the Flask framework. If the database file does not exist,
 # a simple demo dataset will be created.
