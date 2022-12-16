@@ -1,0 +1,40 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Database displayer</title>
+    <meta name="description" content="Simple database display"/>
+    <meta name="author" content="Rotterdam Academy"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/static/basic.css" type="text/css">
+</head>
+<body>
+<main>
+    <h1>Create user</h1>
+    <p>Create hier je user</p>
+    <form method="post">
+        <label for="create">user</label>
+        <br>
+        <input type="text" name="username"
+               placeholder="Naam"
+               value="{{ request.form['username'] }}"></input>
+        <input type="text" name="password"
+               placeholder="Wachtwoord"
+               value="{{ request.form['password'] }}"></input> 
+        <label for="type">type</label>
+        <select name="id" id="id">
+            {% for type in type %}
+                <option value="{{ id[0] }}">{{ id[1] }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="type">type</label>
+        <select name="type" id="type">
+            {% for type in type %}
+                <option value="{{ type[0] }}">{{ type[1] }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+</main>
+</body>
+</html>

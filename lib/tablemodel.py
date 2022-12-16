@@ -30,6 +30,17 @@ class DatabaseModel:
         conn.commit()
         return 
 
+    def create_user(self, user,password, type):
+        conn = sqlite3.connect(self.database_file)
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT id FROM users ORDER BY id DESC LIMIT 1")
+        char = cursor.fetchall()
+        list = char[0]
+        id = list[0] + 1
+        cursor.execute(f"INSERT INTO users (id, user,password,type) VALUES ('{id}', '{user}', '{password}', '{type}')")
+        conn.commit()
+        return 
+
     def login(self, username, password):
         conn = sqlite3.connect(self.database_file)
         cursor = conn.cursor()

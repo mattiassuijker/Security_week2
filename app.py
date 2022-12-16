@@ -58,12 +58,29 @@ def create():
 
     return table_content(table_name='vragen')
 
+
+@app.route("/create_user")
+def create_page2():
+    rows_type = dbm.get_table_content(table_name = 'users')
+    return render_template("user.html", type=rows_type[0],)
+    
+@app.route('/create_user/', methods=('GET', 'POST'))
+def user():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        type = request.form['type']
+        if not type:
+            return render_template('user.html')
+        else:
+            dbm.create_user(username, password, type)
+
+    return table_content(table_name='Tabellen')    
+
 @app.route("/inlog")
 def inlog_page():
     tables = dbm.get_table_list()
-    return render_template(
-        "inlog.html", table_list=tables, database_file=DATABASE_FILE
-    )
+    return render_template("inlog.html", table_list=tables, database_file=DATABASE_FILE)
 
 @app.route("/inlog/", methods=('GET', 'POST'))
 def inlog():
