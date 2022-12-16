@@ -2,7 +2,6 @@ body{
     margin: 0;
     padding: 0;
     font-family: montserrat;
-    background: linear-gradient(120deg,#2980b9, #04a194);
     height: 100vh;
     overflow: hidden;
 }
