@@ -34,7 +34,7 @@ class DatabaseModel:
         conn = sqlite3.connect(self.database_file)
         cursor = conn.cursor()
         id = 3
-        cursor.execute(f"INSERT INTO user (id, user,password,type) VALUES ('{id}', '{user}', '{password}', '{type}')")
+        cursor.execute(f"INSERT INTO users (id, username,password,type) VALUES ('{id}', '{user}', '{password}', '{type}')")
         conn.commit()
         return 
 

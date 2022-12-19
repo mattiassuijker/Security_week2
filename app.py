@@ -75,7 +75,7 @@ def user():
         else:
             dbm.create_user(username, password, type)
 
-    return table_content(table_name='user')    
+    return table_content(table_name='users')    
 
 @app.route("/inlog")
 def inlog_page():
