@@ -31,9 +31,9 @@
                 {% endfor %}
             </ul>
           </li>
-          {% if type == 1 %}
-          <li class="ps-1 pe-1 nav-item">
-            <a class="btn btn-success" aria-current="page" href="/">Users</a>
+          {% if type == 1 or type == 0 %}
+          <li class="ps-1 pe-1 nav-item nav-item">
+            <a class="btn btn-success" aria-current="page" href="/">Home</a>
           </li>
           {% endif %}
         </ul>
@@ -58,9 +58,10 @@
     {% if type == 1 %}
       {% if 'vragen' in table_name %}
           <a href="/create_question" class="btn btn-primary">create</a>
+      {% elif 'users' in table_name %}
+          <a href="/create_user" class="btn btn-primary">create</a>
       {% endif  %}
     {% endif  %}
-    <a href="/create_user" class="btn btn-primary">create</a>
     <div id="container" class="container">
       <button id="update-button">Update</button>
         <table class="table table-bordered table-hover">
