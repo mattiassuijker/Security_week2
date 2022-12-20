@@ -21,21 +21,6 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
-          <li class="ps-1 pe-1 nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Tabellen
-            </a>
-            <ul class="dropdown-menu">
-                {% for table in table_list %}
-                <li><a class="dropdown-item" href="/table_details/{{ table }}">{{ table }}</a></li>
-                {% endfor %}
-            </ul>
-          </li>
-          {% if type == 1 or type == 0 %}
-          <li class="ps-1 pe-1 nav-item nav-item">
-            <a class="btn btn-success" aria-current="page" href="/">Home</a>
-          </li>
-          {% endif %}
         </ul>
       </div>
         <ul class="navbar-nav pe-5">
@@ -53,8 +38,10 @@
     </div>
   </nav>
 <main>
-    <h1>Database onderzoek</h1>
-    <p>Alle rijen in de tabel <b>{{ table_name }}</b>:</p>
+    
+    <div id="container" class="container">
+    <h1>Test correct</h1>
+    <p>Alle rijen in de tabel <b>{{ table_name }}:</b></p>
     {% if type == 1 %}
       {% if 'vragen' in table_name %}
           <a href="/create_question" class="btn btn-primary">create</a>
@@ -62,9 +49,8 @@
           <a href="/create_user" class="btn btn-primary">create</a>
       {% endif  %}
     {% endif  %}
-    <div id="container" class="container">
-      <button id="update-button">Update</button>
-        <table class="table table-bordered table-hover">
+    <button id="update-button">Update</button>
+        <table class="table table-bordered table-hover mt-5">
             <thead>
             <tr>
                 {% for column in columns %}
