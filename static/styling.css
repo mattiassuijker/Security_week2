@@ -144,3 +144,9 @@ input[type="submit"]:hover{
 .Inschrijf_link a:hover{
     text-decoration: underline;
 }
+body p{
+    font-family: 'Zilla Slab', serif !important;
+  }
+body h2{
+    font-family: 'Nunito',sans-serif !important;
+}
