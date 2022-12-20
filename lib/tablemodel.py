@@ -79,7 +79,14 @@ class DatabaseModel:
 
     def html_table_row(self):
         cursor = sqlite3.connect(self.database_file).cursor()
-        cursor.execute(f"SELECT * FROM vragen WHERE vraag LIKE '%<%' OR vraag LIKE '%>%'")
+        cursor.execute(f"SELECT vragen.id, leerdoelen.leerdoel, vragen.vraag, voornaam || ' ' || achternaam AS auteurnaam FROM vragen LEFT JOIN leerdoelen ON vragen.leerdoel = leerdoelen.id LEFT JOIN auteurs ON vragen.auteur = auteurs.id WHERE vraag LIKE '%<%' OR vraag LIKE '%>%'")
+        table_headers = [column_name[0] for column_name in cursor.description]
+        table_content = cursor.fetchall()
+        return table_content, table_headers
+
+    def Leerdoel_table_row(self):
+        cursor = sqlite3.connect(self.database_file).cursor()
+        cursor.execute(f"SELECT * FROM vragen WHERE leerdoel IS NULL OR ''")
         table_headers = [column_name[0] for column_name in cursor.description]
         table_content = cursor.fetchall()
         return table_content, table_headers
