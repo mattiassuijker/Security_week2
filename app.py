@@ -7,6 +7,7 @@ from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
 from flask_session import Session
 
+
 # This demo glues a random database and the Flask framework. If the database file does not exist,
 # a simple demo dataset will be created.
 LISTEN_ALL = "0.0.0.0"
