@@ -89,7 +89,7 @@
                 {% endfor %}
                 {% if type == 1 %}
                   {% if 'vragen' in table_name %}
-                    <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-leerdoel="{{ row[1] }}" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
+                    <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
                     <td><button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal1" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="verwijder btn btn-danger">Verwijderen</button></td>
                   {% endif %}
                 {% endif %}
@@ -154,13 +154,10 @@ $(document).ready(function() {
     $('.wijzig').click(function() {
         var id = $(this).data('id');
         var vraag = $(this).data('vraag');
-        var leerdoel = $(this).data('leerdoel');
 
         console.log('eet')
         document.getElementById("vraag").value = vraag;
         document.getElementById("id").value = id;
-        document.getElementById("leerdoel").value = leerdoel;
-        document.getElementById("leerdoel").textContent = leerdoel;
     });
 
     $('.verwijder').click(function() {

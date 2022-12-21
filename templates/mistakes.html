@@ -175,13 +175,10 @@ $(document).ready(function() {
     $('.wijzig').click(function() {
         var id = $(this).data('id');
         var vraag = $(this).data('vraag');
-        var leerdoel = $(this).data('leerdoel');
 
         console.log('eet')
         document.getElementById("vraag").value = vraag;
         document.getElementById("id").value = id;
-        document.getElementById("leerdoel").value = leerdoel;
-        document.getElementById("leerdoel").textContent = leerdoel;
     });
 
     $('.verwijder').click(function() {
