@@ -26,7 +26,7 @@ class DatabaseModel:
         char = cursor.fetchall()
         list = char[0]
         id = list[0] + 1
-        cursor.execute(f"INSERT INTO vragen (id, leerdoel,vraag, type) VALUES ('{id}', '{leerdoel}', '{question}', '{auteur}')")
+        cursor.execute(f"INSERT INTO vragen (id, leerdoel,vraag, auteur) VALUES ('{id}', '{leerdoel}', '{question}', '{auteur}')")
         conn.commit()
         return 
 
