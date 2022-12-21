@@ -150,7 +150,7 @@
     
 </main>
 <script>
-  $(document).ready(function() {
+$(document).ready(function() {
     $('.wijzig').click(function() {
         var id = $(this).data('id');
         var vraag = $(this).data('vraag');
@@ -170,10 +170,10 @@
         document.getElementById("id1").value = id;
     });
 
-    document.getElementById("medewerker-fout").addEventListener("click", function() {
-      
+    $('#alle-auteurs').click(function() {
+      console.log('water');
       $.ajax({
-        url: '/medewerker-fout',
+        url: '/alle-auteurs',
         type: 'GET',
         success: function(response) {
             $('#table').html(response);
@@ -182,7 +182,31 @@
       });
     });
 
-    document.getElementById("html-fouten").addEventListener("click", function() {
+    $('#alle-gegevens').click(function() {
+      
+      $.ajax({
+        url: '/alle-gegevens',
+        type: 'GET',
+        success: function(response) {
+            $('#table').html(response);
+            console.log(response);
+        }
+      });
+    });
+
+    $('#geen-leerdoel').click(function() {
+      
+      $.ajax({
+        url: '/geen-leerdoel',
+        type: 'GET',
+        success: function(response) {
+            $('#table').html(response);
+            console.log(response);
+        }
+      });
+    });
+
+    $('#html-fouten').click(function() {
       
       $.ajax({
         url: '/html-fouten',
@@ -194,32 +218,20 @@
       });
     });
 
-    document.getElementById("geen-leerdoel").addEventListener("click", function() {
+    $('#medewerker-fout').click(function() {
       
       $.ajax({
-        url: '/geen-leerdoel',
+        url: '/medewerker-fout',
         type: 'GET',
         success: function(response) {
-            // Process the response data here
             $('#table').html(response);
             console.log(response);
         }
       });
     });
 
-    document.getElementById("alle-gegevens").addEventListener("click", function() {
-      
-      $.ajax({
-        url: '/alle-gegevens',
-        type: 'GET',
-        success: function(response) {
-            // Process the response data here
-            $('#table').html(response);
-            console.log(response);
-        }
-      });
-    });
 });
+
 </script>
 </body>
 

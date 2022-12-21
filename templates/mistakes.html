@@ -62,10 +62,18 @@
   </div>
   {% elif 'auteurs' in table_name %}
   <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+    {% if 'auteurs' in query %}
     <input type="radio" class="btn-check" name="auteurs" id="alle-auteurs" autocomplete="off" checked>
+    {% else %}
+    <input type="radio" class="btn-check" name="auteurs" id="alle-auteurs" autocomplete="off">
+    {% endif %}
     <label class="btn btn-outline-primary" for="alle-auteurs">Alle auteurs</label>
   
+    {% if 'medewerker' in query %}
+    <input type="radio" class="btn-check" name="medewerker" id="medewerker-fout" autocomplete="off" checked>
+    {% else %}
     <input type="radio" class="btn-check" name="medewerker" id="medewerker-fout" autocomplete="off">
+    {% endif %}
     <label class="btn btn-outline-primary" for="medewerker-fout">Fout bij medewerker</label>
   </div>
   {% endif  %}
@@ -163,14 +171,17 @@
   
 </main>
 <script>
-  $(document).ready(function() {
+$(document).ready(function() {
     $('.wijzig').click(function() {
         var id = $(this).data('id');
         var vraag = $(this).data('vraag');
+        var leerdoel = $(this).data('leerdoel');
 
         console.log('eet')
         document.getElementById("vraag").value = vraag;
         document.getElementById("id").value = id;
+        document.getElementById("leerdoel").value = leerdoel;
+        document.getElementById("leerdoel").textContent = leerdoel;
     });
 
     $('.verwijder').click(function() {
@@ -180,7 +191,43 @@
         document.getElementById("id1").value = id;
     });
 
-    document.getElementById("html-fouten").addEventListener("click", function() {
+    $('#alle-auteurs').click(function() {
+      console.log('water');
+      $.ajax({
+        url: '/alle-auteurs',
+        type: 'GET',
+        success: function(response) {
+            $('#table').html(response);
+            console.log(response);
+        }
+      });
+    });
+
+    $('#alle-gegevens').click(function() {
+      
+      $.ajax({
+        url: '/alle-gegevens',
+        type: 'GET',
+        success: function(response) {
+            $('#table').html(response);
+            console.log(response);
+        }
+      });
+    });
+
+    $('#geen-leerdoel').click(function() {
+      
+      $.ajax({
+        url: '/geen-leerdoel',
+        type: 'GET',
+        success: function(response) {
+            $('#table').html(response);
+            console.log(response);
+        }
+      });
+    });
+
+    $('#html-fouten').click(function() {
       
       $.ajax({
         url: '/html-fouten',
@@ -192,30 +239,18 @@
       });
     });
 
-    document.getElementById("geen-leerdoel").addEventListener("click", function() {
+    $('#medewerker-fout').click(function() {
       
       $.ajax({
-        url: '/geen-leerdoel',
+        url: '/medewerker-fout',
         type: 'GET',
         success: function(response) {
-            // Process the response data here
             $('#table').html(response);
             console.log(response);
         }
       });
     });
 
-    document.getElementById("alle-gegevens").addEventListener("click", function() {
-      
-      $.ajax({
-        url: '/alle-gegevens',
-        type: 'GET',
-        success: function(response) {
-            // Process the response data here
-            $('#table').html(response);
-            console.log(response);
-        }
-      });
-    });
 });
+
 </script>
