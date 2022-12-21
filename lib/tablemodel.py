@@ -125,3 +125,10 @@ class DatabaseModel:
         connection.commit()
         cursor.close()
 
+    def change_medewerker_table_row(self, medewerker, id):
+        connection = sqlite3.connect(self.database_file)
+        cursor = connection.cursor()
+        cursor.execute(f"UPDATE auteurs SET medewerker = '{medewerker}' WHERE id = '{id}' ")
+        connection.commit()
+        cursor.close()
+

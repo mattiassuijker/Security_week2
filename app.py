@@ -126,6 +126,12 @@ def wijzig_leerdoel_table():
     if request.method == "POST":
         return redirect("/table_details/vragen", code=302)
 
+@app.route("/wijzigmedewerker", methods=['POST', 'GET'])
+def wijzig_medewerker():
+    dbm.change_medewerker_table_row(request.form.get('medewerker'), request.form.get('medewerkerid'))
+    if request.method == "POST":
+        return redirect("/table_details/auteurs", code=302)
+
 @app.route("/verwijder", methods=['POST', 'GET'])
 def delete_table():
     dbm.delete_table_row(request.form.get('id'))

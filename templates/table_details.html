@@ -179,7 +179,7 @@ $(document).ready(function() {
         $(this).removeClass('medewerker');
         var medewerkerid = $(this).data('medewerkerid');
         var medewerker = $(this).data('medewerker');
-        $(this).html('<input type="text" value="">');
+        $(this).html('<form action="/wijzigmedewerker" method="POST"><input type="hidden" name="medewerkerid" value="'+ medewerkerid +'" id="medewerkerid"><select id="medewerker" name="medewerker" required><option value="">Kies een optie</option><option value="1">is medewerker</option><option value="0">is geen medewerker</option></select><button type="submit">Wijzigen</button></form>');
     });
 
     $('#alle-auteurs').click(function() {
