@@ -85,7 +85,15 @@
             {% for row in rows %}
             <tr>
                 {% for field in row %}
+                {% if 'auteurs' in table_name %}
+                {% if loop.index == 5 %}
+                <td class="medewerker" data-medewerkerid="{{ row[0] }}" data-medewerker="{{ field }}">{{ field }}</td>
+                {% else %}
                 <td>{{ field }}</td>
+                {% endif %}
+                {% else %}
+                <td>{{ field }}</td>
+                {% endif %}
                 {% endfor %}
                 {% if type == 1 %}
                   {% if 'vragen' in table_name %}
@@ -165,6 +173,13 @@ $(document).ready(function() {
         var vraag = $(this).data('vraag');
         document.getElementById("vraag1").value = vraag;
         document.getElementById("id1").value = id;
+    });
+
+    $('.medewerker').one('click', function() {
+        $(this).removeClass('medewerker');
+        var medewerkerid = $(this).data('medewerkerid');
+        var medewerker = $(this).data('medewerker');
+        $(this).html('<input type="text" value="">');
     });
 
     $('#alle-auteurs').click(function() {
