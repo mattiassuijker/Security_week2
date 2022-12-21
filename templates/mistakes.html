@@ -36,6 +36,7 @@
         <a href="/create_user" class="btn btn-primary ml-auto">create</a>
     {% endif  %}
   {% endif  %}
+  {% if 'vragen' in table_name %}
   <div class="btn-group ml-auto" role="group" aria-label="Basic radio toggle button group">
 
     {% if 'alles' in query %}
@@ -59,6 +60,15 @@
     
     <label class="btn btn-outline-primary" for="geen-leerdoel">Geen leerdoel</label>
   </div>
+  {% elif 'auteurs' in table_name %}
+  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+    <input type="radio" class="btn-check" name="auteurs" id="alle-auteurs" autocomplete="off" checked>
+    <label class="btn btn-outline-primary" for="alle-auteurs">Alle auteurs</label>
+  
+    <input type="radio" class="btn-check" name="medewerker" id="medewerker-fout" autocomplete="off">
+    <label class="btn btn-outline-primary" for="medewerker-fout">Fout bij medewerker</label>
+  </div>
+  {% endif  %}
       <table class="table table-bordered table-hover mt-5">
           <thead>
           <tr>

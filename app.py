@@ -145,6 +145,13 @@ def html_fouten():
     rows, column_names = dbm.html_table_row()
     return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
 
+@app.route('/medewerker-fout', methods=['GET', 'POST'])
+def medewerker_fout():
+    table_name = 'auteurs'
+    query = 'medewerker'
+    rows, column_names = dbm.medewerker_table_row()
+    return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+
 @app.route('/geen-leerdoel', methods=['GET', 'POST'])
 def geen_leerdoel():
     table_name = 'vragen'

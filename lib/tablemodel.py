@@ -84,6 +84,13 @@ class DatabaseModel:
         table_content = cursor.fetchall()
         return table_content, table_headers
 
+    def medewerker_table_row(self):
+        cursor = sqlite3.connect(self.database_file).cursor()
+        cursor.execute(f"SELECT * FROM auteurs WHERE medewerker NOT IN (0, 1)")
+        table_headers = [column_name[0] for column_name in cursor.description]
+        table_content = cursor.fetchall()
+        return table_content, table_headers
+
     def leerdoel_table_row(self):
         cursor = sqlite3.connect(self.database_file).cursor()
         cursor.execute(f"SELECT vragen.id, leerdoelen.leerdoel, vragen.vraag, voornaam || ' ' || achternaam AS auteurnaam FROM vragen LEFT JOIN leerdoelen ON vragen.leerdoel = leerdoelen.id LEFT JOIN auteurs ON vragen.auteur = auteurs.id WHERE vragen.leerdoel IS NULL OR ''")

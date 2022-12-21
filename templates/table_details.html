@@ -45,18 +45,26 @@
     {% if type == 1 %}
       {% if 'vragen' in table_name %}
           <a href="/create_question" class="btn btn-primary">create</a>
-          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="alles" id="alle-gegevens" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="alle-gegevens">Alle gegevens</label>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" name="alles" id="alle-gegevens" autocomplete="off" checked>
+          <label class="btn btn-outline-primary" for="alle-gegevens">Alle gegevens</label>
           
-            <input type="radio" class="btn-check" name="fouten" id="html-fouten" autocomplete="off">
-            <label class="btn btn-outline-primary" for="html-fouten">HTML in de vragen</label>
+          <input type="radio" class="btn-check" name="fouten" id="html-fouten" autocomplete="off">
+          <label class="btn btn-outline-primary" for="html-fouten">HTML in de vragen</label>
           
-            <input type="radio" class="btn-check" name="leerdoel" id="geen-leerdoel" autocomplete="off">
-            <label class="btn btn-outline-primary" for="geen-leerdoel">Geen leerdoel</label>
-          </div>
+          <input type="radio" class="btn-check" name="leerdoel" id="geen-leerdoel" autocomplete="off">
+          <label class="btn btn-outline-primary" for="geen-leerdoel">Geen leerdoel</label>
+        </div>
       {% elif 'users' in table_name %}
-          <a href="/create_user" class="btn btn-primary ml-auto">create</a>
+        <a href="/create_user" class="btn btn-primary ml-auto">create</a>
+      {% elif 'auteurs' in table_name %}
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" name="auteurs" id="alle-auteurs" autocomplete="off" checked>
+          <label class="btn btn-outline-primary" for="alle-auteurs">Alle auteurs</label>
+        
+          <input type="radio" class="btn-check" name="medewerker" id="medewerker-fout" autocomplete="off">
+          <label class="btn btn-outline-primary" for="medewerker-fout">Fout bij medewerker</label>
+        </div>
       {% endif  %}
     {% endif  %}
         <table class="table table-bordered table-hover mt-5">
@@ -160,6 +168,18 @@
         var vraag = $(this).data('vraag');
         document.getElementById("vraag1").value = vraag;
         document.getElementById("id1").value = id;
+    });
+
+    document.getElementById("medewerker-fout").addEventListener("click", function() {
+      
+      $.ajax({
+        url: '/medewerker-fout',
+        type: 'GET',
+        success: function(response) {
+            $('#table').html(response);
+            console.log(response);
+        }
+      });
     });
 
     document.getElementById("html-fouten").addEventListener("click", function() {
