@@ -1,51 +1,119 @@
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+    <a href="/" class="navbar-brand">
+      <img src="https://www.test-correct.nl/hubfs/raw_assets/public/test-correct/images/testcorrect-logo.svg" class="nav__logo-large">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+      </ul>
+    </div>
+      <ul class="navbar-nav pe-5">
+        {% if type == 0 %}
+        <li class="ps-1 pe-1 nav-item nav-item">
+          <a class="btn btn-primary" aria-current="page" href="/inlog" >Login</a>
+        </li>
+        {% endif %}
+        {% if type != 0 %}
+        <li class="ps-1 pe-1 nav-item">
+          <a class="btn btn-primary" aria-current="page" href="/logout">Logout</a>
+        </li>
+        {% endif %}
+      </ul>
+  </div>
+</nav>
 <main>
-<h1>Database onderzoek</h1>
-<p>Alle rijen in de tabel <b>{{ table_name }}</b>:</p>
-<div id="container" class="container">
-  <button id="update-button">Update</button>
-    <table class="table table-bordered table-hover">
-        <thead>
-        <tr>
-            {% for column in columns %}
-            <th>{{ column }}</th>
-            {% endfor %}
-            {% if type == 1 %}
-              {% if 'vragen' in table_name %}
-              <th>aanpassen</th>
-              <th>Verwijderen</th>
-              {%endif %}
-            {%endif %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for row in rows %}
-        <tr>
-            {% for field in row %}
-            <td>{{ field }}</td>
-            {% endfor %}
-            {% if type == 1 %}
-              {% if 'vragen' in table_name %}
-              <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
-              <td><button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal1" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="verwijder btn btn-danger">Verwijderen</button></td>
+  
+  <div id="container" class="container">
+  <h1>Test correct</h1>
+  <p>Alle rijen in de tabel <b>{{ table_name }}:</b></p>
+  {% if type == 1 %}
+    {% if 'vragen' in table_name %}
+        <a href="/create_question" class="btn btn-primary">create</a>
+    {% elif 'users' in table_name %}
+        <a href="/create_user" class="btn btn-primary ml-auto">create</a>
+    {% endif  %}
+  {% endif  %}
+  <div class="btn-group ml-auto" role="group" aria-label="Basic radio toggle button group">
+
+    {% if 'alles' in query %}
+    <input type="radio" class="btn-check" name="alles" id="alle-gegevens" autocomplete="off" checked>
+    {% else %}
+    <input type="radio" class="btn-check" name="alles" id="alle-gegevens" autocomplete="off">
+    {% endif %}
+    <label class="btn btn-outline-primary" for="alle-gegevens">Alle gegevens</label>
+  
+    {% if 'html' in query %}
+    <input type="radio" class="btn-check" name="fouten" id="html-fouten" autocomplete="off" checked>
+    {% else %}
+    <input type="radio" class="btn-check" name="fouten" id="html-fouten" autocomplete="off">
+    {% endif %}
+    <label class="btn btn-outline-primary" for="html-fouten">HTML in de vragen</label>
+    {% if 'leerdoel' in query %}
+    <input type="radio" class="btn-check" name="leerdoel" id="geen-leerdoel" autocomplete="off" checked>
+    {% else %}
+    <input type="radio" class="btn-check" name="leerdoel" id="geen-leerdoel" autocomplete="off">
+    {% endif %}
+    
+    <label class="btn btn-outline-primary" for="geen-leerdoel">Geen leerdoel</label>
+  </div>
+      <table class="table table-bordered table-hover mt-5">
+          <thead>
+          <tr>
+              {% for column in columns %}
+              <th>{{ column }}</th>
+              {% endfor %}
+              {% if type == 1 %}
+                {% if 'vragen' in table_name %}
+                  <th>aanpassen</th>
+                  <th>Verwijderen</th>
+                {%endif %}
               {% endif %}
-            {%endif %}
-        </tr>
-        {% endfor %}
-        </tbody>
+          </tr>
+          </thead>
+          <tbody>
+          {% for row in rows %}
+          <tr>
+              {% for field in row %}
+              <td>{{ field }}</td>
+              {% endfor %}
+              {% if type == 1 %}
+                {% if 'vragen' in table_name %}
+                  <td><button type="button" id="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="wijzig btn btn-warning">Wijzig</button></td>
+                  <td><button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal1" data-vraag="{{ row[2] }}" data-id="{{ row[0] }}" class="verwijder btn btn-danger">Verwijderen</button></td>
+                {% endif %}
+              {% endif %}
+          </tr>
+          {% endfor %}
+          </tbody>
+  
+      </table>
 
-    </table>
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Wijzigen</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            {% if 'leerdoel' in query %}
+            <form action="/wijzigenleerdoel" id="wijzig" method="POST">
+            {% else %}
             <form action="/wijzigen" method="POST">
+            {% endif %}
               <div class="modal-body">
                     <input type="hidden" class="farm-control" name="id" value="" id="id">
-                      <div class="mb-3">
+                      <div class="mb-3">  
+                        {% if 'leerdoel' in query %}
+                        <select id="leerdoel" name="leerdoel" form="wijzig" class="form-select" aria-label="Default select example" required>
+                          <option  value="" selected>kies een leerdoel</option>
+                          {% for leerdoel in leerdoelen %}
+                          <option value="{{ leerdoel[0] }}">{{ leerdoel[1] }}</option>
+                          {% endfor %}
+                        </select>
+                        {% endif %}
                         <label class="form-label">Vraag</label>
                         <textarea id="vraag" class="form-control" name="vraag" value="" rows="5" cols="70" ></textarea>
                       </div>
@@ -58,68 +126,86 @@
           </div>
         </div>
       </div>
-
-      <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Weet je zeker dat je dit wilt verwijderen.</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Weet je zeker dat je dit wilt verwijderen.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="/verwijder" method="POST">
+                <div class="modal-body">
+                      <input type="hidden" class="farm-control" name="id" value="" id="id1">
+                        <div class="mb-3">
+                          <label class="form-label">Vraag</label>
+                          <textarea id="vraag1" class="form-control" name="vraag" value="" rows="5" cols="70" ></textarea>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleer</button>
+                  <button type="submit" class="btn btn-danger">Verwijderen</button>
+                </div>
+              </form>
             </div>
-            <form action="/verwijder" method="POST">
-              <div class="modal-body">
-                    <input type="hidden" class="farm-control" name="id" value="" id="id1">
-                      <div class="mb-3">
-                        <label class="form-label">Vraag</label>
-                        <textarea id="vraag1" class="form-control" name="vraag" value="" rows="5" cols="70" ></textarea>
-                      </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleer</button>
-                <button type="submit" class="btn btn-danger">Verwijderen</button>
-              </div>
-            </form>
           </div>
         </div>
-      </div>
-</div>
+  </div>
+  
 </main>
-
 <script>
   $(document).ready(function() {
-      $('.wijzig').click(function() {
-          var id = $(this).data('id');
-          var vraag = $(this).data('vraag');
-          console.log('eet');
+    $('.wijzig').click(function() {
+        var id = $(this).data('id');
+        var vraag = $(this).data('vraag');
 
-          document.getElementById("vraag").value = vraag;
-          document.getElementById("id").value = id;
+        console.log('eet')
+        document.getElementById("vraag").value = vraag;
+        document.getElementById("id").value = id;
+    });
+
+    $('.verwijder').click(function() {
+        var id = $(this).data('id');
+        var vraag = $(this).data('vraag');
+        document.getElementById("vraag1").value = vraag;
+        document.getElementById("id1").value = id;
+    });
+
+    document.getElementById("html-fouten").addEventListener("click", function() {
+      
+      $.ajax({
+        url: '/html-fouten',
+        type: 'GET',
+        success: function(response) {
+            $('#table').html(response);
+            console.log(response);
+        }
       });
+    });
 
-      $('.verwijder').click(function() {
-          var id = $(this).data('id');
-          var vraag = $(this).data('vraag');
-          document.getElementById("vraag1").value = vraag;
-          document.getElementById("id1").value = id;
+    document.getElementById("geen-leerdoel").addEventListener("click", function() {
+      
+      $.ajax({
+        url: '/geen-leerdoel',
+        type: 'GET',
+        success: function(response) {
+            // Process the response data here
+            $('#table').html(response);
+            console.log(response);
+        }
       });
+    });
 
-        // add an event listener to the button
-      document.getElementById("update-button").addEventListener("click", function() {
-
-        $.ajax({
-          url: '/get-items',
-          type: 'GET',
-          success: function(response) {
-              // Process the response data here
-              $('#table').html(response);
-              console.log(response);
-          }
-        });
+    document.getElementById("alle-gegevens").addEventListener("click", function() {
+      
+      $.ajax({
+        url: '/alle-gegevens',
+        type: 'GET',
+        success: function(response) {
+            // Process the response data here
+            $('#table').html(response);
+            console.log(response);
+        }
       });
-
-
-
-  });
+    });
+});
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>

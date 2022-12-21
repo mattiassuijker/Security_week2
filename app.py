@@ -108,13 +108,20 @@ def table_content(table_name=None):
     else:
         print(session.get("type"))
         rows, column_names = dbm.get_table_content(table_name)
+        leerdoelen = dbm.alle_leerdoelen()
         return render_template(
-            "table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type")
+            "table_details.html", rows=rows, columns=column_names, table_name=table_name, leerdoelen=leerdoelen, type=session.get("type")
         )
 
 @app.route("/wijzigen", methods=['POST', 'GET'])
 def wijzig_table():
     dbm.change_table_row(request.form.get('vraag'), request.form.get('id'))
+    if request.method == "POST":
+        return redirect("/table_details/vragen", code=302)
+
+@app.route("/wijzigenleerdoel", methods=['POST', 'GET'])
+def wijzig_leerdoel_table():
+    dbm.change_leerdoel_table_row(request.form.get('vraag'), request.form.get('id'), request.form.get('leerdoel'))
     if request.method == "POST":
         return redirect("/table_details/vragen", code=302)
 
@@ -124,19 +131,27 @@ def delete_table():
     if request.method == "POST":
         return redirect("/table_details/vragen", code=302)
 
-@app.route("/update-query", methods=['GET', 'POST'])
-def update_query():
-    rows, column_names = dbm.html_table_content()
-    return render_template(
-            "table_details.html", rows=rows, columns=column_names)
-
-
-@app.route('/get-items', methods=['GET', 'POST'])
-def get_items():
+@app.route('/alle-gegevens', methods=['GET', 'POST'])
+def alle_gegevens():
     table_name = 'vragen'
-    rows, column_names = dbm.html_table_row()
-    return render_template("mistakes.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    query = 'alles'
+    rows, column_names = dbm.alles_table_row()
+    return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
 
+@app.route('/html-fouten', methods=['GET', 'POST'])
+def html_fouten():
+    table_name = 'vragen'
+    query = 'html'
+    rows, column_names = dbm.html_table_row()
+    return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+
+@app.route('/geen-leerdoel', methods=['GET', 'POST'])
+def geen_leerdoel():
+    table_name = 'vragen'
+    query = 'leerdoel'
+    leerdoelen = dbm.alle_leerdoelen()
+    rows, column_names = dbm.leerdoel_table_row()
+    return render_template("mistakes.html", leerdoelen=leerdoelen, rows=rows, query=query, columns=column_names, table_name=table_name, type=session.get("type"))
 
 #404 error pagina
 @app.errorhandler(404)
