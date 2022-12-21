@@ -105,6 +105,13 @@ class DatabaseModel:
         table_content = cursor.fetchall()
         return table_content, table_headers
 
+    def auteurs_table_row(self):
+        cursor = sqlite3.connect(self.database_file).cursor()
+        cursor.execute(f"SELECT * FROM auteurs")
+        table_headers = [column_name[0] for column_name in cursor.description]
+        table_content = cursor.fetchall()
+        return table_content, table_headers
+
     def alle_leerdoelen(self):
         cursor = sqlite3.connect(self.database_file).cursor()
         cursor.execute(f"SELECT id, leerdoel FROM leerdoelen")

@@ -138,6 +138,13 @@ def alle_gegevens():
     rows, column_names = dbm.alles_table_row()
     return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
 
+@app.route('/alle-auteurs', methods=['GET', 'POST'])
+def alle_auteurs():
+    table_name = 'auteurs'
+    query = 'auteurs'
+    rows, column_names = dbm.auteurs_table_row()
+    return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+
 @app.route('/html-fouten', methods=['GET', 'POST'])
 def html_fouten():
     table_name = 'vragen'
