@@ -87,7 +87,13 @@
                 {% for field in row %}
                 {% if 'auteurs' in table_name %}
                 {% if loop.index == 5 %}
+                {% if field == '1' %}
+                <td class="medewerker" data-medewerkerid="{{ row[0] }}" data-medewerker="{{ field }}">is medewerker</td>
+                {% elif field == '0' %}
+                <td class="medewerker" data-medewerkerid="{{ row[0] }}" data-medewerker="{{ field }}">is geen medewerker</td>
+                {% else %}
                 <td class="medewerker" data-medewerkerid="{{ row[0] }}" data-medewerker="{{ field }}">{{ field }}</td>
+                {% endif %}
                 {% else %}
                 <td>{{ field }}</td>
                 {% endif %}
