@@ -1,4 +1,5 @@
 from multiprocessing import connection
+from cryptography.fernet import Fernet
 import os
 import sqlite3
 
@@ -34,7 +35,10 @@ class DatabaseModel:
         conn = sqlite3.connect(self.database_file)
         cursor = conn.cursor()
         id = 3
-        cursor.execute(f"INSERT INTO users (id, username,password,type) VALUES ('{id}', '{user}', '{password}', '{type}')")
+        key = Fernet.generate_key()
+        fernet = Fernet(key)
+        encpassword = fernet.encrypt(password.encode())
+        cursor.execute(f"INSERT INTO users (id, username,password,type) VALUES ('{id}', '{user}', '{encpassword}', '{type}')")
         conn.commit()
         return 
 
