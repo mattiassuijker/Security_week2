@@ -2,7 +2,7 @@ import os.path
 import sys
 
 from flask import Flask, render_template, session, flash, jsonify, request, redirect
-
+from cryptography.fernet import Fernet
 from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
 from flask_session import Session
@@ -33,6 +33,29 @@ dbm = DatabaseModel(DATABASE_FILE)
 # It is a way to "decorate" a function with additional functionality. You
 # can safely ignore this for now - or look into it as it is a really powerful
 # concept in Python.
+
+#class PasswordManager:
+#    def __init__(self):
+#        self.key = None
+#        self.password_file = None
+#        self.password_dict = {}
+
+#    def create_key(self, path):
+#        self.key = Fernet.generate_key()
+#        with open(path, 'wb') as f:
+#            f.write(self.key)
+    
+#    def load_key(self, path):
+#        with open(path, 'rb') as f:
+#            self.key = f.read()
+
+#    def load_password_file(self,path):
+#        self.password_file = path
+
+#        with open(path, 'r') as f:
+#            for line in f:
+                
+
 @app.route("/")
 def index():
     tables = dbm.get_table_list()
@@ -71,10 +94,13 @@ def user():
         username = request.form['username']
         password = request.form['password']
         type = request.form['type']
+        key = Fernet.generate_key()
+        fernet = Fernet(key)
+        decpassword = fernet.decrypt(password).decode()
         if not type:
-            return render_template('user.html')
+            return render_template('users.html')
         else:
-            dbm.create_user(username, password, type)
+            dbm.create_user(username, decpassword, type)
 
     return table_content(table_name='users')    
 
