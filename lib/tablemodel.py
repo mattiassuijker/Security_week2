@@ -1,9 +1,15 @@
 from multiprocessing import connection
 from cryptography.fernet import Fernet
+from flask_bcrypt import Bcrypt
+from flask_bcrypt import check_password_hash
+from flask import Flask, render_template, session, flash, jsonify, request, redirect
 import os
 import sqlite3
+import locale
 
 
+app = Flask(__name__)
+bcrypt = Bcrypt(app)
 class DatabaseModel:
     """This class is a wrapper around the sqlite3 database. It provides a simple interface that maps methods
     to database queries. The only required parameter is the database file."""
@@ -35,16 +41,17 @@ class DatabaseModel:
         conn = sqlite3.connect(self.database_file)
         cursor = conn.cursor()
         id = 3
-        key = Fernet.generate_key()
-        fernet = Fernet(key)
-        encpassword = fernet.encrypt(password.encode())
-        cursor.execute(f"INSERT INTO users (id, username,password,type) VALUES ('{id}', '{user}', '{encpassword}', '{type}')")
+        encpass = bcrypt.generate_password_hash(password).decode()
+        password = encpass
+        cursor.execute(f"INSERT INTO users (id, username,password,type) VALUES ('{id}', '{user}', '{password}', '{type}')")
         conn.commit()
         return 
 
     def login(self, username, password):
         conn = sqlite3.connect(self.database_file)
         cursor = conn.cursor()
+        encpass = bcrypt.generate_password_hash(password).decode()
+        print(encpass)
         cursor.execute(f"SELECT type FROM users WHERE username='{username}' AND password='{password}'")
         level_block = cursor.fetchall()
         if not level_block:
@@ -135,4 +142,5 @@ class DatabaseModel:
         cursor.execute(f"UPDATE auteurs SET medewerker = '{medewerker}' WHERE id = '{id}' ")
         connection.commit()
         cursor.close()
+
 

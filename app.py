@@ -1,6 +1,8 @@
 import os.path
 import sys
 
+from flask_bcrypt import Bcrypt
+from flask_bcrypt import check_password_hash
 from flask import Flask, render_template, session, flash, jsonify, request, redirect
 from cryptography.fernet import Fernet
 from lib.tablemodel import DatabaseModel
@@ -16,6 +18,7 @@ FLASK_PORT = 81
 FLASK_DEBUG = True
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 # This command creates the "<application directory>/databases/testcorrect_vragen.db" path
 DATABASE_FILE = os.path.join(app.root_path, 'databases', 'testcorrect_vragen.db')
 app.config["SESSION_PERMANENT"] = False
@@ -34,26 +37,28 @@ dbm = DatabaseModel(DATABASE_FILE)
 # can safely ignore this for now - or look into it as it is a really powerful
 # concept in Python.
 
-#class PasswordManager:
-#    def __init__(self):
-#        self.key = None
-#        self.password_file = None
-#        self.password_dict = {}
+class PasswordManager:
+    def __init__(self):
+        self.key = None
+        self.password_file = None
+        self.password_dict = {}
 
-#    def create_key(self, path):
-#        self.key = Fernet.generate_key()
-#        with open(path, 'wb') as f:
-#            f.write(self.key)
-    
-#    def load_key(self, path):
-#        with open(path, 'rb') as f:
-#            self.key = f.read()
+    def create_key(self, path):
+        self.key = Fernet.generate_key()
+        with open(path, 'wb') as f:
+            f.write(self.key)
+            
+    def load_key(self, path):
+        with open(path, 'rb') as f:
+            self.key = f.read()
 
-#    def load_password_file(self,path):
-#        self.password_file = path
+    def load_password_file(self,path):
+        self.password_file = path
 
-#        with open(path, 'r') as f:
-#            for line in f:
+        with open(path, 'r') as f:
+            for line in f:
+                site, encrypted = line.split(":")
+                self.password_dict[site] = Fernet(self.key).decrypt(encrypted.encode())
                 
 
 @app.route("/")
@@ -94,13 +99,11 @@ def user():
         username = request.form['username']
         password = request.form['password']
         type = request.form['type']
-        key = Fernet.generate_key()
-        fernet = Fernet(key)
-        decpassword = fernet.decrypt(password).decode()
+        #encpass = bcrypt.generate_password_hash(password)
         if not type:
             return render_template('users.html')
         else:
-            dbm.create_user(username, decpassword, type)
+            dbm.create_user(username, password, type)
 
     return table_content(table_name='users')    
 
@@ -114,6 +117,9 @@ def inlog():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        encpass = bcrypt.generate_password_hash(password).decode()
+        print(encpass)
+        #if check_password_hash(password, "admin"):
         if dbm.login(username, password) == False:
             return redirect("/inlog")
         else:
