@@ -117,9 +117,6 @@ def inlog():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        encpass = bcrypt.generate_password_hash(password).decode()
-        print(encpass)
-        #if check_password_hash(password, "admin"):
         if dbm.login(username, password) == False:
             return redirect("/inlog")
         else:

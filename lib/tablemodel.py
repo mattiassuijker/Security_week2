@@ -43,22 +43,20 @@ class DatabaseModel:
         id = 3
         encpass = bcrypt.generate_password_hash(password).decode()
         password = encpass
-        cursor.execute(f"INSERT INTO users (id, username,password,type) VALUES ('{id}', '{user}', '{password}', '{type}')")
+        cursor.execute(f"INSERT INTO users (id, username,password,type) VALUES ('{id}', '{user}', '{encpass}', '{type}')")
         conn.commit()
         return 
 
     def login(self, username, password):
         conn = sqlite3.connect(self.database_file)
         cursor = conn.cursor()
-        encpass = bcrypt.generate_password_hash(password).decode()
-        print(encpass)
-        cursor.execute(f"SELECT type FROM users WHERE username='{username}' AND password='{password}'")
-        level_block = cursor.fetchall()
-        if not level_block:
+        cursor.execute(f"SELECT * FROM users WHERE username='{username}'")
+        level_block = cursor.fetchone()
+        if not level_block or not bcrypt.check_password_hash(level_block[2], password):
             return False
         else:
-            level = level_block[0]
-            return level[0]
+            return level_block[0]
+
 
     # Given a table name, return the rows and column names
     def get_table_content(self, table_name):
