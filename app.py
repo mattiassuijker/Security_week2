@@ -1,9 +1,9 @@
 import os.path
 import sys
-
+import csv
 from flask_bcrypt import Bcrypt
 from flask_bcrypt import check_password_hash
-from flask import Flask, render_template, session, flash, jsonify, request, redirect
+from flask import Flask, render_template, session, flash, jsonify, request, redirect, send_file
 from cryptography.fernet import Fernet
 from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
@@ -129,6 +129,28 @@ def logout():
     session["type"] = 0
     return redirect("/")
 
+@app.route("/csv/<table_name>")
+def data_to_csv(table_name=None):
+    # Connect to the database and retrieve the data
+    data = dbm.get_table_content(table_name)
+    print(data[0])
+    # Open the CSV file in write mode
+    csvfile = open('data.csv', 'w', newline='')
+
+    # Create a CSV writer object
+    writer = csv.writer(csvfile)
+
+    # Write the data to the CSV file
+    for row in data[0]:
+        writer.writerow(row)
+    
+    # Close the CSV file
+    csvfile.close()
+    return redirect("/")
+    
+@app.route('/download')
+def download_csv():
+  return send_file('data.csv', mimetype='text/csv')
 
 # The table route displays the content of a table
 @app.route("/table_details/<table_name>",  methods=['GET', 'POST'])
