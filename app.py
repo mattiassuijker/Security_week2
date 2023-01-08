@@ -60,7 +60,7 @@ class PasswordManager:
                 site, encrypted = line.split(":")
                 self.password_dict[site] = Fernet(self.key).decrypt(encrypted.encode())
                 
-
+# hier wordt de homepage aangeroepen als de website geopent word
 @app.route("/")
 def index():
     tables = dbm.get_table_list()
@@ -109,6 +109,7 @@ def user():
 
     return table_content(table_name='users')    
 
+# hier wordt de inloge page aangeroepen doordat de user op de inlog button gedrukt heeft.
 @app.route("/inlog")
 def inlog_page():
     tables = dbm.get_table_list()
