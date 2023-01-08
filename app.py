@@ -87,7 +87,9 @@ def create():
 
     return table_content(table_name='vragen')
 
-
+# hier wordt create_user opgehaald en gebruikt om in te loggen.
+# ook wordt hier onderscheid gemaakt met de waarde van het account 1/2 
+# 1 = admin 2 = een user
 @app.route("/create_user")
 def create_page2():
     rows_type = dbm.get_table_content(table_name = 'users')

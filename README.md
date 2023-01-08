@@ -6,6 +6,15 @@ Starter repository voor Werkplaats 2. Deze repository bevat een Flask applicatie
 - HTML & Style sheets
 
 
+# wachtwoord
+accounts
+username: admin
+password: admin
+
+username: user
+password: user
+
+
 # Installatie
 Om Flask te kunnen starten zul je eerst de Flask packages moeten installeren. Wil je latere problemen met versies voorkomen, dan raden we je aan een virtual environment te maken en daar de modules in te installeren:  
 ```

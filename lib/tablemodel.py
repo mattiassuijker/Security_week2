@@ -37,6 +37,8 @@ class DatabaseModel:
         conn.commit()
         return 
 
+    # in de function create_user word een wachtwoord gemaakt en die wordt ook gelijkt encrypted door encpass
+    # en met de library bcrypt
     def create_user(self, user,password, type):
         conn = sqlite3.connect(self.database_file)
         cursor = conn.cursor()
@@ -46,7 +48,8 @@ class DatabaseModel:
         cursor.execute(f"INSERT INTO users (id, username,password,type) VALUES ('{id}', '{user}', '{encpass}', '{type}')")
         conn.commit()
         return 
-
+    # De login functie zorgt ervoor dat er ingelogd kan worden en met de if statement wordt er nagekeken of 
+    # de encrypted wachtwoord overeen komt met en ingevoerde wachtwoord van de user.
     def login(self, username, password):
         conn = sqlite3.connect(self.database_file)
         cursor = conn.cursor()
