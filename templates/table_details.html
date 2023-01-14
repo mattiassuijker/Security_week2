@@ -55,6 +55,15 @@
           <input type="radio" class="btn-check" name="leerdoel" id="geen-leerdoel" autocomplete="off">
           <label class="btn btn-outline-primary" for="geen-leerdoel">Geen leerdoel</label>
         </div>
+      <div>
+        <form action="/filterenID" method="POST">
+          <label>Minimale ID:</label>
+          <input name="minID" id="minID" type="number">
+          <label>Maximale ID:</label>
+          <input name="maxID" id="maxID" type="number">
+          <button class="btn btn-primary" type="submit">Filter</button>
+        </form>
+      </div>
       {% elif 'users' in table_name %}
         <a href="/create_user" class="btn btn-primary ml-auto">create</a>
       {% elif 'auteurs' in table_name %}

@@ -186,15 +186,23 @@ def wijzig_medewerker():
     if request.method == "POST":
         return redirect("/table_details/auteurs", code=302)
 
+@app.route("/filterenID", methods=['POST', 'GET'])
+def filteren_ID():
+    table_name = 'vragen'
+    rows, column_names = dbm.filterenID(request.form.get('minID'), request.form.get('maxID'))
+    return render_template("mistakes.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+
 @app.route("/verwijder", methods=['POST', 'GET'])
 def delete_table():
     dbm.delete_table_row(request.form.get('id'))
     if request.method == "POST":
         return redirect("/table_details/vragen", code=302)
 
+#approute om alle gegevens aan te tonen
 @app.route('/alle-gegevens', methods=['GET', 'POST'])
 def alle_gegevens():
     table_name = 'vragen'
+    #query is alles zodat ik dit later in de template kan checken en dus de dingen kan laten zien wat ik wil laten zien
     query = 'alles'
     rows, column_names = dbm.alles_table_row()
     return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
