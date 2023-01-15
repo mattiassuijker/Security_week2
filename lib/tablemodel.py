@@ -210,6 +210,7 @@ class DatabaseModel:
     def get_table_content(self, table_name):
         cursor = sqlite3.connect(self.database_file).cursor()
         if (table_name == 'vragen'):
+            #gebruik gemaakt van een left join zodat er geen cijfers worden getoond, er ook voor gezorgd dat voornaam en achternaam als 1 value wordt aangegeven
             cursor.execute(f"SELECT vragen.id, leerdoelen.leerdoel, vragen.vraag, voornaam || ' ' || achternaam AS auteurnaam FROM vragen LEFT JOIN leerdoelen ON vragen.leerdoel = leerdoelen.id LEFT JOIN auteurs ON vragen.auteur = auteurs.id LIMIT 70")
         else:
             cursor.execute(f"SELECT * FROM {table_name} LIMIT 40")

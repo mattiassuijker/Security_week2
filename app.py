@@ -168,14 +168,19 @@ def table_content(table_name=None):
             "table_details.html", rows=rows, columns=column_names, table_name=table_name, leerdoelen=leerdoelen, type=session.get("type")
         )
 
+#approute voor het wijzigen van een vraag
 @app.route("/wijzigen", methods=['POST', 'GET'])
 def wijzig_table():
+    #voert de functie in tabelmodel uit genaam change_table_row, dit met 2 variables. de id en de nieuwe vraag.
     dbm.change_table_row(request.form.get('vraag'), request.form.get('id'))
+    #als de requestmethod post is redirect ie je terug naar de website.
     if request.method == "POST":
         return redirect("/table_details/vragen", code=302)
 
+#approute voor het wijzigen van een leerdoel
 @app.route("/wijzigenleerdoel", methods=['POST', 'GET'])
 def wijzig_leerdoel_table():
+    #tijdens het wijzigen van de leerdoel kan je de vraag ook wijzigen vandaar dat de vraag ook mee wordt gestuurd.
     dbm.change_leerdoel_table_row(request.form.get('vraag'), request.form.get('id'), request.form.get('leerdoel'))
     if request.method == "POST":
         return redirect("/table_details/vragen", code=302)
@@ -189,8 +194,14 @@ def wijzig_medewerker():
 @app.route("/filterenID", methods=['POST', 'GET'])
 def filteren_ID():
     table_name = 'vragen'
-    rows, column_names = dbm.filterenID(request.form.get('minID'), request.form.get('maxID'))
-    return render_template("table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    minID = request.form.get('minID')
+    maxID = request.form.get('maxID')
+    if request.form.get('minID') > request.form.get('maxID'):
+        rows, column_names = dbm.alles_table_row()
+        return render_template("table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    else:
+        rows, column_names = dbm.filterenID(request.form.get('minID'), request.form.get('maxID'))
+        return render_template("table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
 
 @app.route("/verwijder", methods=['POST', 'GET'])
 def delete_table():
