@@ -29,5 +29,5 @@ Om de demo applicatie te starten:
 .\venv\sripts\activate
 python app.py
 ```
-
-# Diederik test 
+#gemaakt door:
+Mattias, Mohamed en Yassine
