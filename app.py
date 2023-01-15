@@ -190,7 +190,7 @@ def wijzig_medewerker():
 def filteren_ID():
     table_name = 'vragen'
     rows, column_names = dbm.filterenID(request.form.get('minID'), request.form.get('maxID'))
-    return render_template("mistakes.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    return render_template("table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
 
 @app.route("/verwijder", methods=['POST', 'GET'])
 def delete_table():
