@@ -66,48 +66,61 @@ def index():
     tables = dbm.get_table_list()
     return render_template("home.html", table_list=tables, database_file=DATABASE_FILE, type=session.get("type"))
 
-
+def is_user_logged_in():
+    return session.get("type") != 0
 
 @app.route("/create_question")
 def create_page():
-    rows_leerdoelen = dbm.get_table_content(table_name = 'leerdoelen')
-    rows_auteurs = dbm.get_table_content(table_name = 'auteurs')
-    return render_template("create.html", leerdoelen=rows_leerdoelen[0],auteurs=rows_auteurs[0])
+    if is_user_logged_in():
+        rows_leerdoelen = dbm.get_table_content(table_name = 'leerdoelen')
+        rows_auteurs = dbm.get_table_content(table_name = 'auteurs')
+        return render_template("create.html", leerdoelen=rows_leerdoelen[0],auteurs=rows_auteurs[0])
+    else:
+        return redirect('/inlog')
     
 @app.route('/create_question/', methods=('GET', 'POST'))
 def create():
-    if request.method == 'POST':
-        question = request.form['vraag']
-        leerdoel = request.form['leerdoel']
-        auteur = request.form['auteur']
-        if not question:
-            return render_template('create.html')
-        else:
-            dbm.create_vraag(question, leerdoel, auteur)
+    if is_user_logged_in():
+        if request.method == 'POST':
+            question = request.form['vraag']
+            leerdoel = request.form['leerdoel']
+            auteur = request.form['auteur']
+            if not question:
+                return render_template('create.html')
+            else:
+                dbm.create_vraag(question, leerdoel, auteur)
 
-    return table_content(table_name='vragen')
+        return table_content(table_name='vragen')
+    else:
+        return redirect('/inlog')
 
 # hier wordt create_user opgehaald en gebruikt om in te loggen.
 # ook wordt hier onderscheid gemaakt met de waarde van het account 1/2 
 # 1 = admin 2 = een user
 @app.route("/create_user")
 def create_page2():
-    rows_type = dbm.get_table_content(table_name = 'users')
-    return render_template("user.html", type=rows_type[0],)
-    
+    if is_user_logged_in():
+        rows_type = dbm.get_table_content(table_name = 'users')
+        return render_template("user.html", type=rows_type[0],)
+    else:
+        return redirect('/inlog')
+
 @app.route('/create_user/', methods=('GET', 'POST'))
 def user():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        type = request.form['type']
-        #encpass = bcrypt.generate_password_hash(password)
-        if not type:
-            return render_template('users.html')
-        else:
-            dbm.create_user(username, password, type)
+    if is_user_logged_in():
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
+            type = request.form['type']
+            #encpass = bcrypt.generate_password_hash(password)
+            if not type:
+                return render_template('users.html')
+            else:
+                dbm.create_user(username, password, type)
 
-    return table_content(table_name='users')    
+        return table_content(table_name='users')    
+    else:
+        return redirect('/inlog')
 
 # hier wordt de inloge page aangeroepen doordat de user op de inlog button gedrukt heeft.
 @app.route("/inlog")
@@ -158,95 +171,129 @@ def download_csv():
 # The table route displays the content of a table
 @app.route("/table_details/<table_name>",  methods=['GET', 'POST'])
 def table_content(table_name=None):
-    if not table_name:
-        return "Missing table name", 400  # HTTP 400 = Bad Request
+    if is_user_logged_in():
+        if not table_name:
+            return "Missing table name", 400  # HTTP 400 = Bad Request
+        else:
+            print(session.get("type"))
+            rows, column_names = dbm.get_table_content(table_name)
+            leerdoelen = dbm.alle_leerdoelen()
+            return render_template(
+                "table_details.html", rows=rows, columns=column_names, table_name=table_name, leerdoelen=leerdoelen, type=session.get("type")
+            )
     else:
-        print(session.get("type"))
-        rows, column_names = dbm.get_table_content(table_name)
-        leerdoelen = dbm.alle_leerdoelen()
-        return render_template(
-            "table_details.html", rows=rows, columns=column_names, table_name=table_name, leerdoelen=leerdoelen, type=session.get("type")
-        )
+        return redirect('/inlog')
+    
 
 #approute voor het wijzigen van een vraag
 @app.route("/wijzigen", methods=['POST', 'GET'])
 def wijzig_table():
-    #voert de functie in tabelmodel uit genaam change_table_row, dit met 2 variables. de id en de nieuwe vraag.
-    dbm.change_table_row(request.form.get('vraag'), request.form.get('id'))
-    #als de requestmethod post is redirect ie je terug naar de website.
-    if request.method == "POST":
-        return redirect("/table_details/vragen", code=302)
-
+    if is_user_logged_in():
+        #voert de functie in tabelmodel uit genaam change_table_row, dit met 2 variables. de id en de nieuwe vraag.
+        dbm.change_table_row(request.form.get('vraag'), request.form.get('id'))
+        #als de requestmethod post is redirect ie je terug naar de website.
+        if request.method == "POST":
+            return redirect("/table_details/vragen", code=302)
+    else:
+        return redirect('/inlog')
+    
 #approute voor het wijzigen van een leerdoel
 @app.route("/wijzigenleerdoel", methods=['POST', 'GET'])
 def wijzig_leerdoel_table():
-    #tijdens het wijzigen van de leerdoel kan je de vraag ook wijzigen vandaar dat de vraag ook mee wordt gestuurd.
-    dbm.change_leerdoel_table_row(request.form.get('vraag'), request.form.get('id'), request.form.get('leerdoel'))
-    if request.method == "POST":
-        return redirect("/table_details/vragen", code=302)
+    if is_user_logged_in():
+        #tijdens het wijzigen van de leerdoel kan je de vraag ook wijzigen vandaar dat de vraag ook mee wordt gestuurd.
+        dbm.change_leerdoel_table_row(request.form.get('vraag'), request.form.get('id'), request.form.get('leerdoel'))
+        if request.method == "POST":
+            return redirect("/table_details/vragen", code=302)
+    else:
+        return redirect('/inlog')
 
 @app.route("/wijzigmedewerker", methods=['POST', 'GET'])
 def wijzig_medewerker():
-    dbm.change_medewerker_table_row(request.form.get('medewerker'), request.form.get('medewerkerid'))
-    if request.method == "POST":
-        return redirect("/table_details/auteurs", code=302)
+    if is_user_logged_in():
+        dbm.change_medewerker_table_row(request.form.get('medewerker'), request.form.get('medewerkerid'))
+        if request.method == "POST":
+            return redirect("/table_details/auteurs", code=302)
+    else:
+        return redirect('/inlog')
 
 @app.route("/filterenID", methods=['POST', 'GET'])
 def filteren_ID():
-    table_name = 'vragen'
-    minID = request.form.get('minID')
-    maxID = request.form.get('maxID')
-    if request.form.get('minID') > request.form.get('maxID'):
-        rows, column_names = dbm.alles_table_row()
-        return render_template("table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    if is_user_logged_in():
+        table_name = 'vragen'
+        minID = request.form.get('minID')
+        maxID = request.form.get('maxID')
+        if request.form.get('minID') > request.form.get('maxID'):
+            rows, column_names = dbm.alles_table_row()
+            return render_template("table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+        else:
+            rows, column_names = dbm.filterenID(request.form.get('minID'), request.form.get('maxID'))
+            return render_template("table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
     else:
-        rows, column_names = dbm.filterenID(request.form.get('minID'), request.form.get('maxID'))
-        return render_template("table_details.html", rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
-
+        return redirect('/inlog')
+    
 @app.route("/verwijder", methods=['POST', 'GET'])
 def delete_table():
-    dbm.delete_table_row(request.form.get('id'))
-    if request.method == "POST":
-        return redirect("/table_details/vragen", code=302)
+    if is_user_logged_in():
+        dbm.delete_table_row(request.form.get('id'))
+        if request.method == "POST":
+            return redirect("/table_details/vragen", code=302)
+    else:
+        return redirect('/inlog')
 
 #approute om alle gegevens aan te tonen
 @app.route('/alle-gegevens', methods=['GET', 'POST'])
 def alle_gegevens():
-    table_name = 'vragen'
-    #query is alles zodat ik dit later in de template kan checken en dus de dingen kan laten zien wat ik wil laten zien
-    query = 'alles'
-    rows, column_names = dbm.alles_table_row()
-    return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
-
+    if is_user_logged_in():
+        table_name = 'vragen'
+        #query is alles zodat ik dit later in de template kan checken en dus de dingen kan laten zien wat ik wil laten zien
+        query = 'alles'
+        rows, column_names = dbm.alles_table_row()
+        return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    else:
+        return redirect('/inlog')
+    
 @app.route('/alle-auteurs', methods=['GET', 'POST'])
 def alle_auteurs():
-    table_name = 'auteurs'
-    query = 'auteurs'
-    rows, column_names = dbm.auteurs_table_row()
-    return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
-
+    if is_user_logged_in():
+        table_name = 'auteurs'
+        query = 'auteurs'
+        rows, column_names = dbm.auteurs_table_row()
+        return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    else:
+        return redirect('/inlog')
+    
 @app.route('/html-fouten', methods=['GET', 'POST'])
 def html_fouten():
-    table_name = 'vragen'
-    query = 'html'
-    rows, column_names = dbm.html_table_row()
-    return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    if is_user_logged_in():
+        table_name = 'vragen'
+        query = 'html'
+        rows, column_names = dbm.html_table_row()
+        return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    else:
+        return redirect('/inlog')
 
 @app.route('/medewerker-fout', methods=['GET', 'POST'])
 def medewerker_fout():
-    table_name = 'auteurs'
-    query = 'medewerker'
-    rows, column_names = dbm.medewerker_table_row()
-    return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    if is_user_logged_in():
+        table_name = 'auteurs'
+        query = 'medewerker'
+        rows, column_names = dbm.medewerker_table_row()
+        return render_template("mistakes.html", query=query, rows=rows, columns=column_names, table_name=table_name, type=session.get("type"))
+    else:
+        return redirect('/inlog')
 
 @app.route('/geen-leerdoel', methods=['GET', 'POST'])
 def geen_leerdoel():
-    table_name = 'vragen'
-    query = 'leerdoel'
-    leerdoelen = dbm.alle_leerdoelen()
-    rows, column_names = dbm.leerdoel_table_row()
-    return render_template("mistakes.html", leerdoelen=leerdoelen, rows=rows, query=query, columns=column_names, table_name=table_name, type=session.get("type"))
-
+    if is_user_logged_in():
+        table_name = 'vragen'
+        query = 'leerdoel'
+        leerdoelen = dbm.alle_leerdoelen()
+        rows, column_names = dbm.leerdoel_table_row()
+        return render_template("mistakes.html", leerdoelen=leerdoelen, rows=rows, query=query, columns=column_names, table_name=table_name, type=session.get("type"))
+    else:
+        return redirect('/inlog')
+    
 #404 error pagina
 @app.errorhandler(404)
 def page_not_found(e):
