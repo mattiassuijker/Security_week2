@@ -4,10 +4,12 @@ import csv
 from flask_bcrypt import Bcrypt
 from flask_bcrypt import check_password_hash
 from flask import Flask, render_template, session, flash, jsonify, request, redirect, send_file
+from datetime import datetime 
 from cryptography.fernet import Fernet
 from lib.tablemodel import DatabaseModel
 from lib.demodatabase import create_demo_database
 from flask_session import Session
+from flask_limiter import Limiter
 
 
 # This demo glues a random database and the Flask framework. If the database file does not exist,
@@ -18,6 +20,10 @@ FLASK_PORT = 81
 FLASK_DEBUG = True
 
 app = Flask(__name__)
+limiter = Limiter(app)
+login_attempts = {}
+
+
 bcrypt = Bcrypt(app)
 # This command creates the "<application directory>/databases/testcorrect_vragen.db" path
 DATABASE_FILE = os.path.join(app.root_path, 'databases', 'testcorrect_vragen.db')
@@ -59,7 +65,7 @@ class PasswordManager:
             for line in f:
                 site, encrypted = line.split(":")
                 self.password_dict[site] = Fernet(self.key).decrypt(encrypted.encode())
-                
+
 # hier wordt de homepage aangeroepen als de website geopent word
 @app.route("/")
 def index():
@@ -144,17 +150,32 @@ def inlog_page():
     tables = dbm.get_table_list()
     return render_template("inlog.html", table_list=tables, database_file=DATABASE_FILE)
 
+@limiter.limit("5 per minute")
 @app.route("/inlog/", methods=('GET', 'POST'))
 def inlog():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if dbm.login(username, password) == False:
-            return redirect("/inlog")
+        level = dbm.login(username, password)
+        
+        if level == 0:
+            flash("Login failed. Please check your credentials and try again.")
+            ip_address = request.remote_addr
+            login_time = datetime.now()
+            if ip_address in login_attempts:
+                time_elapsed = (login_time - login_attempts[ip_address]).seconds
+                if time_elapsed < 60:
+                    flash("Too many login attempts. Please try again later.")
+                    return redirect("/inlog")
+                else:
+                    del login_attempts[ip_address]
+            else:
+                login_attempts[ip_address] = login_time
         else:
-            level = dbm.login(username, password)
             session["type"] = level
-    return redirect("/")
+            return redirect("/")
+
+    return render_template("inlog.html")
 
 @app.route("/logout")
 def logout():
