@@ -94,6 +94,7 @@ def create():
     else:
         return redirect('/inlog')
 
+
 # hier wordt create_user opgehaald en gebruikt om in te loggen.
 # ook wordt hier onderscheid gemaakt met de waarde van het account 1/2 
 # 1 = admin 2 = een user
@@ -105,16 +106,31 @@ def create_page2():
     else:
         return redirect('/inlog')
 
+def is_weak_password(password):
+    # Load the list of worst passwords from a file
+    worst_passwords_file = "10k-worst-passwords.txt"  # Replace with the actual path to your worst passwords list file
+    with open(worst_passwords_file, "r") as file:
+        worst_passwords = [line.strip() for line in file]
+
+    # Check if the entered password is in the list of worst passwords
+    return password in worst_passwords
+
+
 @app.route('/create_user/', methods=('GET', 'POST'))
 def user():
     if is_user_logged_in():
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
+
+            if is_weak_password(password):
+                flash("Please choose a stronger password.")
+                return render_template('user.html')
+            
             type = request.form['type']
             #encpass = bcrypt.generate_password_hash(password)
             if not type:
-                return render_template('users.html')
+                return render_template('user.html')
             else:
                 dbm.create_user(username, password, type)
 
